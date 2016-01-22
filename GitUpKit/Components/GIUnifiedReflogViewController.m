@@ -56,6 +56,20 @@ static NSColor* _reachableColor = nil;
   _reachableColor = [NSColor colorWithDeviceRed:0.7 green:0.7 blue:0.7 alpha:1.0];
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  
+  if (darkTheme) {
+    _missingColor = [NSColor colorWithDeviceRed:0.6978 green:0.0 blue:0.0301 alpha:1.0];
+    _unreachableColor = [NSColor colorWithDeviceRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    _reachableColor = [NSColor colorWithDeviceRed:0.8903 green:0.8903 blue:0.8903 alpha:1.0];
+  } else {
+    _missingColor = [NSColor colorWithDeviceRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+    _unreachableColor = [NSColor colorWithDeviceRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+    _reachableColor = [NSColor colorWithDeviceRed:0.7 green:0.7 blue:0.7 alpha:1.0];
+  }
+}
+
 - (instancetype)initWithRepository:(GCLiveRepository*)repository {
   if ((self = [super initWithRepository:repository])) {
     _dateFormatter = [[NSDateFormatter alloc] init];
@@ -214,6 +228,7 @@ static NSString* _StringFromActions(GCReflogActions actions) {
     view.mode = -1;
     color = _missingColor;
   }
+  
   view.dateTextField.stringValue = [_dateFormatter stringFromDate:entry.date];
   view.dateTextField.textColor = color;
   view.actionTextField.stringValue = _StringFromActions(entry.actions);
@@ -223,6 +238,7 @@ static NSString* _StringFromActions(GCReflogActions actions) {
   view.restoreButton.hidden = ![_tableView isRowSelected:row] || (view.mode > 0);
   view.restoreButton.enabled = (view.mode == 0);
   [view saveTextFieldColors];
+  
   return view;
 }
 

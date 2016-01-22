@@ -95,6 +95,7 @@ static NSColor* _patternColor = nil;
 
 - (void)_setGraphViewBackgroundColors:(BOOL)previewMode {
   if (previewMode) {
+    _patternColor = [NSColor colorWithPatternImage:[[NSBundle bundleForClass:[GIMapViewController class]] imageForResource:@"background_pattern"]];
     _graphView.backgroundColor = _patternColor;
   } else {
     if(self.darkTheme) {

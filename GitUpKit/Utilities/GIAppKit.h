@@ -61,6 +61,7 @@ extern NSString* const GICommitMessageViewUserDefaultKey_EnableSpellChecking;
 
 @interface GITableCellView : NSTableCellView
 @property(nonatomic) NSInteger row;
+@property(nonatomic) BOOL darkTheme;
 - (void)saveTextFieldColors;
 @end
 

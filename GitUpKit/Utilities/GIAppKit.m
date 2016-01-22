@@ -323,10 +323,23 @@ static NSColor* _separatorColor = nil;
   _separatorColor = [NSColor colorWithDeviceRed:0.9 green:0.9 blue:0.9 alpha:1.0];
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme {
+  _darkTheme = darkTheme;
+  if (darkTheme) {
+    _separatorColor = [NSColor colorWithDeviceRed:0.2233 green:0.2233 blue:0.2233 alpha:1.0];
+  } else {
+    _separatorColor = [NSColor colorWithDeviceRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+  }
+}
+
 - (void)saveTextFieldColors {
   for (NSView* view in self.subviews) {
     if ([view isKindOfClass:[NSTextField class]]) {
-      objc_setAssociatedObject(view, _associatedObjectCommitKey, [(NSTextField*)view textColor], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+      if (_darkTheme) {
+        [(NSTextField*)view setTextColor:[NSColor whiteColor]];
+      } else {
+        objc_setAssociatedObject(view, _associatedObjectCommitKey, [(NSTextField*)view textColor], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+      }
     }
   }
 }
@@ -342,7 +355,7 @@ static NSColor* _separatorColor = nil;
   
   for (NSView* view in self.subviews) {
     if ([view isKindOfClass:[NSTextField class]]) {
-      if (backgroundStyle == NSBackgroundStyleDark) {
+      if (backgroundStyle == NSBackgroundStyleDark || _darkTheme) {
         [(NSTextField*)view setTextColor:[NSColor whiteColor]];
       } else {
         [(NSTextField*)view setTextColor:objc_getAssociatedObject(view, _associatedObjectCommitKey)];

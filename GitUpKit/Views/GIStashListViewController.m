@@ -47,6 +47,11 @@
 @end
 
 @implementation GIStashCellView
+
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+}
+
 @end
 
 @implementation GIStashListViewController {
@@ -66,6 +71,12 @@
     }
   }
   return self;
+}
+
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  [_cachedCellView setDarkTheme:darkTheme];
+  [_diffContentsViewController setDarkTheme:darkTheme];
 }
 
 - (void)loadView {
@@ -126,6 +137,7 @@
 
 - (NSView*)tableView:(NSTableView*)tableView viewForTableColumn:(NSTableColumn*)tableColumn row:(NSInteger)row {
   GIStashCellView* view = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
+  [view setDarkTheme:self.darkTheme];
   view.row = row;
   GCStash* stash = _stashes[row];
   view.dateTextField.stringValue = [_dateFormatter stringFromDate:stash.date];
