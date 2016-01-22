@@ -58,6 +58,12 @@
   self.messageTextView.string = @"";
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  [_diffContentsViewController setDarkTheme:darkTheme];
+  [_diffFilesViewController setDarkTheme:darkTheme];
+}
+
 - (void)viewWillShow {
   [super viewWillShow];
 

@@ -67,6 +67,11 @@
   [self _reloadContents];
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  [_diffContentsViewController setDarkTheme:darkTheme];
+  [_diffFilesViewController setDarkTheme:darkTheme];
+}
 - (void)viewDidHide {
   _unifiedStatus = nil;
   _indexConflicts = nil;

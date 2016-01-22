@@ -58,6 +58,12 @@
   return self;
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  [_diffContentsViewController setDarkTheme:darkTheme];
+  [_diffFilesViewController setDarkTheme:darkTheme];
+}
+
 - (void)dealloc {
   [[NSNotificationCenter defaultCenter] removeObserver:self name:NSSplitViewDidResizeSubviewsNotification object:nil];
 }

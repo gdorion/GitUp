@@ -75,6 +75,12 @@
   [_filesView replaceWithView:_diffFilesViewController.view];
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  [_diffContentsViewController setDarkTheme:darkTheme];
+  [_diffFilesViewController setDarkTheme:darkTheme];
+}
+
 - (void)viewWillShow {
   XLOG_DEBUG_CHECK(_targetCommit != nil);
   [super viewWillShow];

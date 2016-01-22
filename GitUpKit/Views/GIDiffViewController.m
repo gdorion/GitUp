@@ -60,6 +60,12 @@
   [_filesView replaceWithView:_diffFilesViewController.view];
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  [_diffContentsViewController setDarkTheme:darkTheme];
+  [_diffFilesViewController setDarkTheme:darkTheme];
+}
+
 - (void)setCommit:(GCCommit*)commit withParentCommit:(GCCommit*)parentCommit {
   if ((commit != _commit) || (parentCommit != _parentCommit)) {
     _commit = commit;
