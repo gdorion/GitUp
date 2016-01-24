@@ -40,6 +40,7 @@
 @end
 
 @interface GIDiffRowView : NSTableRowView
+@property(nonatomic) BOOL darkTheme;
 @end
 
 @interface GIHeaderDiffCellView : NSTableCellView
@@ -79,7 +80,6 @@
 
 @interface GIDiffContentsViewController () <NSTableViewDataSource, GIDiffViewDelegate>
 @property(nonatomic, weak) IBOutlet GIDiffContentScrollView* scrollView;
-@property(nonatomic, weak) IBOutlet GIContentsTableView* tableView;
 @property(nonatomic, weak) IBOutlet NSTextField* emptyTextField;
 @end
 
@@ -98,13 +98,26 @@ NSString* const GIDiffContentsViewControllerUserDefaultKey_DiffViewMode = @"GIDi
 
 @implementation GIDiffRowView
 
+- (void)setDarkTheme:(BOOL)darkTheme {
+  _darkTheme = darkTheme;
+  if (darkTheme) {
+    self.backgroundColor = NSColor.blackColor;
+  } else {
+    self.backgroundColor = NSColor.whiteColor;
+  }
+}
+
 - (BOOL)isOpaque {
   return YES;
 }
 
 // Override all native drawing
 - (void)drawRect:(NSRect)dirtyRect {
-  [[NSColor whiteColor] setFill];
+  if (_darkTheme) {
+    [[NSColor blackColor] setFill];
+  } else {
+    [[NSColor whiteColor] setFill];
+  }
   NSRectFill(dirtyRect);
 }
 
@@ -295,6 +308,7 @@ static NSColor* _DimColor(NSColor* color) {
     _renamedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:77.9 / 255.0 green:49.6 / 255.0 blue:104.3 / 255.0 alpha:1.0]);
     _untrackedBackgroundColor = [NSColor colorWithDeviceRed:0.3334 green:0.3334 blue:0.3334 alpha:1.0];
     
+    _tableView.backgroundColor = [NSColor blackColor];
   } else {
     _tableView.backgroundColor = [NSColor colorWithDeviceRed:0 green:0 blue:0 alpha:1.0];
     _conflictBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(255.0 / 255.0) green:(132.0 / 255.0) blue:(0.0 / 255.0) alpha:1.0]);
@@ -303,6 +317,7 @@ static NSColor* _DimColor(NSColor* color) {
     _deletedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(241.0 / 255.0) green:(115.0 / 255.0) blue:(116.0 / 255.0) alpha:1.0]);
     _renamedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(133.0 / 255.0) green:(96.0 / 255.0) blue:(168.0 / 255.0) alpha:1.0]);
     _untrackedBackgroundColor = [NSColor colorWithDeviceRed:0.75 green:0.75 blue:0.75 alpha:1.0];
+    _tableView.backgroundColor = [NSColor whiteColor];
     
   }
   [self _updateDiffViews];
@@ -484,7 +499,9 @@ static NSColor* _DimColor(NSColor* color) {
 }
 
 - (NSTableRowView*)tableView:(NSTableView*)tableView rowViewForRow:(NSInteger)row {
-  return [[GIDiffRowView alloc] init];
+  GIDiffRowView *cell = [[GIDiffRowView alloc] init];
+  [cell setDarkTheme:self.darkTheme];
+  return cell;
 }
 
 - (void)tableView:(NSTableView *)tableView didRemoveRowView:(NSTableRowView*)rowView forRow:(NSInteger)row {

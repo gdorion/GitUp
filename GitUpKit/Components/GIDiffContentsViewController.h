@@ -14,6 +14,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "GIViewController.h"
+@class GIContentsTableView;
 
 #import "GCDiff.h"
 
@@ -37,6 +38,7 @@ extern NSString* const GIDiffContentsViewControllerUserDefaultKey_DiffViewMode; 
 @property(nonatomic) BOOL showsUntrackedAsAdded;  // Default is NO
 @property(nonatomic, copy) NSString* emptyLabel;
 @property(nonatomic, strong) NSView* headerView;
+@property (weak) IBOutlet GIContentsTableView *tableView;
 
 @property(nonatomic, readonly) NSArray* deltas;
 @property(nonatomic, readonly) NSDictionary* conflicts;

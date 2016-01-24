@@ -56,8 +56,7 @@
       debugXPCServices = "NO"
       enableAddressSanitizer = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "NO"
-      viewDebuggingEnabled = "No">
+      allowLocationSimulation = "NO">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
