@@ -297,8 +297,16 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   
   if (darkThemeEnabled) {
     _mainWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
+    _titleTextField.textColor = NSColor.whiteColor;
+    _infoTextField0.textColor = NSColor.whiteColor;
+    _infoTextField1.textColor = NSColor.whiteColor;
+    _infoTextField2.textColor = NSColor.lightGrayColor;
   } else {
     _mainWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    _titleTextField.textColor = NSColor.blackColor;
+    _infoTextField0.textColor = NSColor.blackColor;
+    _infoTextField1.textColor = [NSColor colorWithWhite:48/255 alpha:1];
+    _infoTextField2.textColor = [NSColor colorWithWhite:127/255 alpha:1];
   }
   _contentView.wantsLayer = YES;
   _leftView.wantsLayer = YES;
