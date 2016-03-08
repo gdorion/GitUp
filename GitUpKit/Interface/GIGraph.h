@@ -40,6 +40,7 @@ typedef NS_OPTIONS(NSUInteger, GIGraphOptions) {
 @property(nonatomic, readonly) NSUInteger numberOfDummyNodes;
 @property(nonatomic, readonly) NSArray* nodesWithReferences;
 @property(nonatomic, readonly) CGSize size;
+@property(nonatomic) BOOL darkTheme;
 
 - (GINode*)nodeForCommit:(GCHistoryCommit*)commit;
 

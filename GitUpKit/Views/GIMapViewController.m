@@ -61,6 +61,7 @@
 @property(nonatomic, weak) IBOutlet NSTextField* messageTextField;
 @property(nonatomic, strong) IBOutlet GICommitMessageView* messageTextView;  // Does not support weak references
 @property(nonatomic, weak) IBOutlet NSButton* messageButton;
+@property(nonatomic) BOOL enableDarkTheme;
 @end
 
 static NSColor* _patternColor = nil;
@@ -87,11 +88,22 @@ static NSColor* _patternColor = nil;
   return self;
 }
 
+- (void)setEnableDarkTheme:(BOOL)enableDarkTheme {
+  _enableDarkTheme = enableDarkTheme;
+  _graphView.darkTheme = enableDarkTheme;
+  //TODO: support previewMode
+  [self _setGraphViewBackgroundColors:false];
+}
+
 - (void)_setGraphViewBackgroundColors:(BOOL)previewMode {
   if (previewMode) {
     _graphView.backgroundColor = _patternColor;
   } else {
-    _graphView.backgroundColor = [NSColor whiteColor];
+    if(_enableDarkTheme) {
+      _graphView.backgroundColor = [NSColor blackColor];
+    }else{
+      _graphView.backgroundColor = [NSColor whiteColor];
+    }
   }
   _graphScrollView.backgroundColor = _graphView.backgroundColor;  // Required for exposed areas through elasticity
 }

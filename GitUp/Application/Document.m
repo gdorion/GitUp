@@ -283,10 +283,18 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   if (frameString) {
     [_mainWindow setFrameFromString:frameString];
   }
-  _mainWindow.backgroundColor = [NSColor whiteColor];
+  
+  BOOL darkThemeEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKey_EnableDarkTheme];
+  _mainWindow.backgroundColor = [NSColor clearColor];
   [_mainWindow setToolbar:_toolbar];
   if (_unifiedToolbar) {
     [_mainWindow setTitleVisibility:NSWindowTitleHidden];
+  }
+  
+  if (darkThemeEnabled) {
+    _mainWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
+  } else {
+    _mainWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
   }
   _contentView.wantsLayer = YES;
   _leftView.wantsLayer = YES;
@@ -301,6 +309,7 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   
   _mapViewController = [[GIMapViewController alloc] initWithRepository:_repository];
   _mapViewController.delegate = self;
+  [_mapViewController setEnableDarkTheme:[[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKey_EnableDarkTheme]];
   [_mapControllerView replaceWithView:_mapViewController.view];
   _mapView.frame = _mapContainerView.bounds;
   [_mapContainerView addSubview:_mapView];
@@ -372,7 +381,11 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   NSTabViewItem* configItem = [_mainTabView tabViewItemAtIndex:[_mainTabView indexOfTabViewItemWithIdentifier:kWindowModeString_Map_Config]];
   configItem.view = _configViewController.view;
   
-  _hiddenWarningView.layer.backgroundColor = [[NSColor colorWithDeviceRed:0.0 green:0.0 blue:0.0 alpha:0.5] CGColor];
+  if([[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKey_EnableDarkTheme]) {
+    _hiddenWarningView.layer.backgroundColor = [[NSColor colorWithDeviceRed:1 green:1 blue:1 alpha:0.5] CGColor];
+  } else {
+    _hiddenWarningView.layer.backgroundColor = [[NSColor colorWithDeviceRed:0.0 green:0.0 blue:0.0 alpha:0.5] CGColor];
+  }
   _hiddenWarningView.layer.cornerRadius = 10.0;
   
   [(NSTextFieldCell*)_searchField.cell setPlaceholderString:NSLocalizedString(@"Preparing Search… ", nil)];

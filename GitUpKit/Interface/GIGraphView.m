@@ -861,7 +861,7 @@ static void _DrawLine(GILine* line, CGContextRef context, CGFloat offset, CGFloa
   }
 }
 
-static void _DrawBranchTitle(CGContextRef context, CGFloat x, CGFloat y, CGPoint* previousBranchCorner, GIBranch* branch, NSColor* color, GIGraphOptions options) {
+static void _DrawBranchTitle(CGContextRef context, CGFloat x, CGFloat y, CGPoint* previousBranchCorner, GIBranch* branch, NSColor* color, GIGraphOptions options, BOOL darkTheme) {
 
   // Cache common format for multiline string
   static NSMutableDictionary* multilineTitleAttributes = nil;
@@ -883,7 +883,7 @@ static void _DrawBranchTitle(CGContextRef context, CGFloat x, CGFloat y, CGPoint
   if (boldFont == NULL) {
     boldFont = CTFontCreateUIFontForLanguage(kCTFontUIFontEmphasizedSystem, 13.0, CFSTR("en-US"));
   }
-  NSColor* darkColor = [NSColor colorWithDeviceWhite:0.2 alpha:1.0];
+  NSColor* titleColor = darkTheme ? [NSColor colorWithDeviceWhite:0.8 alpha:1.0] : [NSColor colorWithDeviceWhite:0.2 alpha:1.0];
   
   // Start new attributed string for the branch title
   NSMutableAttributedString* multilineTitle = [[NSMutableAttributedString alloc] initWithString:@""];
@@ -895,7 +895,7 @@ static void _DrawBranchTitle(CGContextRef context, CGFloat x, CGFloat y, CGPoint
     NSRange branchNameRange = NSMakeRange(multilineTitle.length, branchName.length);
     _AppendAttributedString((CFMutableAttributedStringRef)multilineTitle, [NSString stringWithFormat:@"%@\n", branchName], multilineTitleAttributes);
     [multilineTitle addAttribute:NSFontAttributeName value:(id)boldFont range:branchNameRange];
-    [multilineTitle addAttribute:NSForegroundColorAttributeName value:darkColor range:branchNameRange];
+    [multilineTitle addAttribute:NSForegroundColorAttributeName value:titleColor range:branchNameRange];
     
     GCBranch* upstream = localBranch.upstream;
     if (upstream) {
@@ -903,7 +903,7 @@ static void _DrawBranchTitle(CGContextRef context, CGFloat x, CGFloat y, CGPoint
       
       NSString* upstreamName = [upstream isKindOfClass:GCRemoteBranch.class] ? [(GCRemoteBranch*)upstream branchName] : upstream.name;
       NSRange upstreamNameRange = NSMakeRange(multilineTitle.length - upstreamName.length - 1, upstreamName.length); // -1 to exclude '\n'
-      [multilineTitle addAttribute:NSForegroundColorAttributeName value:darkColor range:upstreamNameRange];
+      [multilineTitle addAttribute:NSForegroundColorAttributeName value:titleColor range:upstreamNameRange];
     }
     
     _AppendAttributedString((CFMutableAttributedStringRef)multilineTitle, @"\n", nil);
@@ -914,7 +914,7 @@ static void _DrawBranchTitle(CGContextRef context, CGFloat x, CGFloat y, CGPoint
     _AppendAttributedString((CFMutableAttributedStringRef)multilineTitle, [NSString stringWithFormat:@"%@\n", remoteBranch.name], multilineTitleAttributes);
     NSRange branchNameRange = NSMakeRange(multilineTitle.length - branchName.length - 1, branchName.length); // -1 to exclude '\n'
     [multilineTitle addAttribute:NSFontAttributeName value:(id)boldFont range:branchNameRange];
-    [multilineTitle addAttribute:NSForegroundColorAttributeName value:darkColor range:branchNameRange];
+    [multilineTitle addAttribute:NSForegroundColorAttributeName value:titleColor range:branchNameRange];
   }
   
   if (branch.remoteBranches.count) {
@@ -926,7 +926,7 @@ static void _DrawBranchTitle(CGContextRef context, CGFloat x, CGFloat y, CGPoint
     _AppendAttributedString((CFMutableAttributedStringRef)multilineTitle, [NSString stringWithFormat:@"[%@]\n", tagName], multilineTitleAttributes);
     NSRange tagNameRange = NSMakeRange(multilineTitle.length - tagName.length - 2, tagName.length); // -2 to exclude char ']' plus '\n'
     [multilineTitle addAttribute:NSFontAttributeName value:(id)boldFont range:tagNameRange];
-    [multilineTitle addAttribute:NSForegroundColorAttributeName value:darkColor range:tagNameRange];
+    [multilineTitle addAttribute:NSForegroundColorAttributeName value:titleColor range:tagNameRange];
   }
   
   if (branch.tags.count) {
@@ -1054,7 +1054,7 @@ static void _DrawBranchTitle(CGContextRef context, CGFloat x, CGFloat y, CGPoint
   CFRelease(framesetter);
 }
 
-static void _DrawNodeLabels(CGContextRef context, CGFloat x, CGFloat y, GINode* node, NSDictionary* tagAttributes, NSDictionary* branchAttributes) {
+static void _DrawNodeLabels(CGContextRef context, CGFloat x, CGFloat y, GINode* node, NSDictionary* tagAttributes, NSDictionary* branchAttributes, BOOL darkTheme) {
   GCHistoryCommit* commit = node.commit;
   
   // Generate text
@@ -1137,10 +1137,20 @@ static void _DrawNodeLabels(CGContextRef context, CGFloat x, CGFloat y, GINode* 
     // Draw label
     
     CGRect labelRect = CGRectInset(CGRectMake(textRect.origin.x, textRect.origin.y, MIN(textRect.size.width, kNodeLabelMaxWidth), textRect.size.height), -3.5, -2.5);
-    CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.85);
+
+    float outlineColorLightness;
+    
+    if (darkTheme) {
+      outlineColorLightness = 0.7;
+      CGContextSetRGBFillColor(context, 0, 0, 0, 0.85);
+    }else{
+      outlineColorLightness = 0.4;
+      CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.85);
+    }
+    
     GICGContextAddRoundedRect(context, labelRect, 4.0);
     CGContextFillPath(context);
-    CGContextSetRGBStrokeColor(context, 0.4, 0.4, 0.4, 1.0);
+    CGContextSetRGBStrokeColor(context, outlineColorLightness, outlineColorLightness, outlineColorLightness, 1.0);
     GICGContextAddRoundedRect(context, labelRect, 4.0);
     CGContextStrokePath(context);
     
@@ -1148,12 +1158,12 @@ static void _DrawNodeLabels(CGContextRef context, CGFloat x, CGFloat y, GINode* 
     CGContextAddLineToPoint(context, labelRect.origin.x + 1, labelRect.origin.y + 1);
     CGContextStrokePath(context);
     
-    CGContextSetRGBFillColor(context, 0.4, 0.4, 0.4, 1.0);
+    CGContextSetRGBFillColor(context, outlineColorLightness, outlineColorLightness, outlineColorLightness, 1.0);
     CGContextFillEllipseInRect(context, CGRectMake(-2, -2, 4, 4));
     
     // Draw text
     
-    CGContextSetRGBFillColor(context, 0.4, 0.4, 0.4, 1.0);
+    CGContextSetRGBFillColor(context, outlineColorLightness, outlineColorLightness, outlineColorLightness, 1.0);
     CFArrayRef lines = CTFrameGetLines(frame);
     for (CFIndex i = 0, count = CFArrayGetCount(lines); i < count; ++i) {
       CTLineRef line = CFArrayGetValueAtIndex(lines, i);
@@ -1191,7 +1201,7 @@ static void _DrawNodeLabels(CGContextRef context, CGFloat x, CGFloat y, GINode* 
   [label release];
 }
 
-static void _DrawHead(CGContextRef context, CGFloat x, CGFloat y, BOOL isDetached, CGColorRef color, NSDictionary* attributes) {
+static void _DrawHead(CGContextRef context, CGFloat x, CGFloat y, BOOL isDetached, CGColorRef color, NSDictionary* attributes, BOOL darkTheme) {
   CGRect rect = CGRectMake(-18, -9, 36, 18);
   
   // Prepare context
@@ -1210,7 +1220,11 @@ static void _DrawHead(CGContextRef context, CGFloat x, CGFloat y, BOOL isDetache
   CGContextFillPath(context);
   
   if (!isDetached) {
-    CGContextSetRGBStrokeColor(context, 0.4, 0.4, 0.4, 1.0);
+    if (darkTheme) {
+      CGContextSetRGBStrokeColor(context, 0.9, 0.9, 0.9, 1.0);
+    } else {
+      CGContextSetRGBStrokeColor(context, 0.4, 0.4, 0.4, 1.0);
+    }
     CGContextSetLineWidth(context, 2);
     GICGContextAddRoundedRect(context, rect, 4.0);
     CGContextStrokePath(context);
@@ -1239,7 +1253,7 @@ static inline void _AppendAttributedString(CFMutableAttributedStringRef string, 
   }
 }
 
-static void _DrawSelectedNode(CGContextRef context, CGFloat x, CGFloat y, GINode* node, NSDictionary* attributes1, NSDictionary* attributes2, NSDateFormatter* dateFormatter, BOOL isFirstResponder) {
+static void _DrawSelectedNode(CGContextRef context, CGFloat x, CGFloat y, GINode* node, NSDictionary* attributes1, NSDictionary* attributes2, NSDateFormatter* dateFormatter, BOOL isFirstResponder, BOOL darkTheme) {
   GCHistoryCommit* commit = node.commit;
   
   // Generate text
@@ -1334,14 +1348,17 @@ static void _DrawSelectedNode(CGContextRef context, CGFloat x, CGFloat y, GINode
   // Draw label
   
   if (isFirstResponder) {
-    CGContextSetFillColorWithColor(context, [[NSColor alternateSelectedControlColor] CGColor]);  // NSTableView focused highlight color
+    CGContextSetFillColorWithColor(context, darkTheme ? [NSColor colorWithWhite:0 alpha:0.9].CGColor : [NSColor alternateSelectedControlColor].CGColor);  // NSTableView focused highlight color
   } else {
-    CGContextSetFillColorWithColor(context, [[NSColor secondarySelectedControlColor] CGColor]);  // NSTableView unfocused highlight color
+    CGContextSetFillColorWithColor(context, darkTheme ? [NSColor colorWithWhite:0 alpha:0.3].CGColor : [NSColor secondarySelectedControlColor].CGColor);  // NSTableView unfocused highlight color
   }
   CGContextAddPath(context, labelPath);
   CGContextFillPath(context);
-  
-  CGContextSetRGBStrokeColor(context, 1.0, 1.0, 1.0, 1.0);
+  if (darkTheme) {
+    CGContextSetRGBStrokeColor(context, 0.7, 0.7, 0.7, 0.7);
+  } else {
+    CGContextSetRGBStrokeColor(context, 1.0, 1.0, 1.0, 1.0);
+  }
   CGContextSetLineWidth(context, 2);
   CGContextAddPath(context, labelPath);
   CGContextStrokePath(context);
@@ -1500,7 +1517,11 @@ static void _DrawSelectedNode(CGContextRef context, CGFloat x, CGFloat y, GINode
   // Draw lines
   if (lines.count) {
     CGContextSetLineJoin(context, kCGLineJoinMiter);
-    CGContextSetBlendMode(context, kCGBlendModeMultiply);
+    if(_darkTheme){
+      CGContextSetBlendMode(context, kCGBlendModeScreen);
+    } else {
+      CGContextSetBlendMode(context, kCGBlendModeMultiply);
+    }
     for (NSInteger i = 0, count = lines.count; i < count; ++i) {
       GILine* line = lines[i];
       BOOL onBranchMainLine = line.branchMainLine;
@@ -1619,7 +1640,7 @@ static void _DrawSelectedNode(CGContextRef context, CGFloat x, CGFloat y, GINode
 #endif
         _DrawNodeLabels(context, x, y, node,
                         _showsTagLabels && (node.layer.index > 0) ? tagAttributes : nil,
-                        _showsBranchLabels && (node.layer.index > 0) ? branchAttributes : nil);
+                        _showsBranchLabels && (node.layer.index > 0) ? branchAttributes : nil, _darkTheme);
       }
     }
   }
@@ -1646,7 +1667,7 @@ static void _DrawSelectedNode(CGContextRef context, CGFloat x, CGFloat y, GINode
         CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 0.666);
         CGContextFillRect(context, HEAD_BOUNDS(x, y));
 #endif
-        _DrawHead(context, x, y, !_graph.history.HEADBranch, headNode.primaryLine.color.CGColor, tagAttributes);
+        _DrawHead(context, x, y, !_graph.history.HEADBranch, headNode.primaryLine.color.CGColor, tagAttributes, _darkTheme);
       }
     }
   }
@@ -1660,7 +1681,7 @@ static void _DrawSelectedNode(CGContextRef context, CGFloat x, CGFloat y, GINode
       GINode* node = branch.tipNode;
       CGFloat x = CONVERT_X(node.x);
       CGFloat y = CONVERT_Y(offset - node.layer.y);
-      _DrawBranchTitle(context, x, y, &previousBranchCorner, branch, node.primaryLine.color, graphOptions);
+      _DrawBranchTitle(context, x, y, &previousBranchCorner, branch, node.primaryLine.color, graphOptions, _darkTheme);
     }
   }
   
@@ -1673,7 +1694,7 @@ static void _DrawSelectedNode(CGContextRef context, CGFloat x, CGFloat y, GINode
       CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 0.666);
       CGContextFillRect(context, SELECTED_NODE_BOUNDS(x, y));
 #endif
-      _DrawSelectedNode(context, x, y, _selectedNode, selectedAttributes1, selectedAttributes2, _dateFormatter, self.window.keyWindow && (self.window.firstResponder == self));
+      _DrawSelectedNode(context, x, y, _selectedNode, selectedAttributes1, selectedAttributes2, _dateFormatter, self.window.keyWindow && (self.window.firstResponder == self), _darkTheme);
     }
   }
   
