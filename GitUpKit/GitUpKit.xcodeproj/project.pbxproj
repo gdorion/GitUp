@@ -12,6 +12,15 @@
 		749786941B85AAB10065BD55 /* GCOrderedSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 74EDB5D11B84D4C400F00E79 /* GCOrderedSet.m */; };
 		74EDB5D61B84E06500F00E79 /* GCOrderedSet-Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 74EDB5D51B84E06500F00E79 /* GCOrderedSet-Tests.m */; };
 		74EDB5D71B8517F500F00E79 /* GCOrderedSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 74EDB5D11B84D4C400F00E79 /* GCOrderedSet.m */; };
+		DC67379E1C4DEF2A0044476C /* pmh_styleparser.c in Sources */ = {isa = PBXBuildFile; fileRef = DC6737951C4DEF2A0044476C /* pmh_styleparser.c */; };
+		DC67379F1C4DEF2A0044476C /* pmh_styleparser.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6737961C4DEF2A0044476C /* pmh_styleparser.h */; };
+		DC6737A01C4DEF2A0044476C /* pmh_definitions.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6737971C4DEF2A0044476C /* pmh_definitions.h */; };
+		DC6737A11C4DEF2A0044476C /* pmh_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = DC6737981C4DEF2A0044476C /* pmh_parser.c */; };
+		DC6737A21C4DEF2A0044476C /* pmh_parser.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6737991C4DEF2A0044476C /* pmh_parser.h */; };
+		DC6737A31C4DEF2A0044476C /* HGMarkdownHighlighter.h in Headers */ = {isa = PBXBuildFile; fileRef = DC67379A1C4DEF2A0044476C /* HGMarkdownHighlighter.h */; };
+		DC6737A51C4DEF2A0044476C /* HGMarkdownHighlightingStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = DC67379C1C4DEF2A0044476C /* HGMarkdownHighlightingStyle.h */; };
+		DC6737A61C4DEF2A0044476C /* HGMarkdownHighlightingStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = DC67379D1C4DEF2A0044476C /* HGMarkdownHighlightingStyle.m */; };
+		DC6737AC1C4DF6890044476C /* HGMarkdownHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = DC67379B1C4DEF2A0044476C /* HGMarkdownHighlighter.m */; };
 		E200A3BA1B02DDA100C4E39D /* GCPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = E200A3B81B02DDA100C4E39D /* GCPrivate.m */; };
 		E20EB08C19FC75CA0031A075 /* GCRepository+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = E20EB08A19FC75CA0031A075 /* GCRepository+Reset.m */; };
 		E20EB09019FC76160031A075 /* GCRepository+Status.m in Sources */ = {isa = PBXBuildFile; fileRef = E20EB08E19FC76160031A075 /* GCRepository+Status.m */; };
@@ -420,6 +429,15 @@
 		74EDB5D01B84D4C400F00E79 /* GCOrderedSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCOrderedSet.h; sourceTree = "<group>"; };
 		74EDB5D11B84D4C400F00E79 /* GCOrderedSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCOrderedSet.m; sourceTree = "<group>"; };
 		74EDB5D51B84E06500F00E79 /* GCOrderedSet-Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GCOrderedSet-Tests.m"; sourceTree = "<group>"; };
+		DC6737951C4DEF2A0044476C /* pmh_styleparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pmh_styleparser.c; sourceTree = "<group>"; };
+		DC6737961C4DEF2A0044476C /* pmh_styleparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pmh_styleparser.h; sourceTree = "<group>"; };
+		DC6737971C4DEF2A0044476C /* pmh_definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pmh_definitions.h; sourceTree = "<group>"; };
+		DC6737981C4DEF2A0044476C /* pmh_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pmh_parser.c; sourceTree = "<group>"; };
+		DC6737991C4DEF2A0044476C /* pmh_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pmh_parser.h; sourceTree = "<group>"; };
+		DC67379A1C4DEF2A0044476C /* HGMarkdownHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HGMarkdownHighlighter.h; sourceTree = "<group>"; };
+		DC67379B1C4DEF2A0044476C /* HGMarkdownHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HGMarkdownHighlighter.m; sourceTree = "<group>"; };
+		DC67379C1C4DEF2A0044476C /* HGMarkdownHighlightingStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HGMarkdownHighlightingStyle.h; sourceTree = "<group>"; };
+		DC67379D1C4DEF2A0044476C /* HGMarkdownHighlightingStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HGMarkdownHighlightingStyle.m; sourceTree = "<group>"; };
 		E200A3B81B02DDA100C4E39D /* GCPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCPrivate.m; sourceTree = "<group>"; };
 		E20EB08919FC75CA0031A075 /* GCRepository+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GCRepository+Reset.h"; sourceTree = "<group>"; };
 		E20EB08A19FC75CA0031A075 /* GCRepository+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GCRepository+Reset.m"; sourceTree = "<group>"; };
@@ -693,6 +711,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC6737A71C4DEF350044476C /* Markdown Synthax Highlighter */ = {
+			isa = PBXGroup;
+			children = (
+				DC6737951C4DEF2A0044476C /* pmh_styleparser.c */,
+				DC6737961C4DEF2A0044476C /* pmh_styleparser.h */,
+				DC6737971C4DEF2A0044476C /* pmh_definitions.h */,
+				DC6737981C4DEF2A0044476C /* pmh_parser.c */,
+				DC6737991C4DEF2A0044476C /* pmh_parser.h */,
+				DC67379A1C4DEF2A0044476C /* HGMarkdownHighlighter.h */,
+				DC67379B1C4DEF2A0044476C /* HGMarkdownHighlighter.m */,
+				DC67379C1C4DEF2A0044476C /* HGMarkdownHighlightingStyle.h */,
+				DC67379D1C4DEF2A0044476C /* HGMarkdownHighlightingStyle.m */,
+			);
+			name = "Markdown Synthax Highlighter";
+			sourceTree = "<group>";
+		};
 		E20A52341A80D1BF003546C3 /* Framework and Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -878,6 +912,7 @@
 				E21752ED1B914EC000BE234A /* libgit2.xcodeproj */,
 				E267E1AA1B84D6C500BAB377 /* GitUpKit.h */,
 				E267E1AC1B84D6C500BAB377 /* Info.plist */,
+				DC6737A71C4DEF350044476C /* Markdown Synthax Highlighter */,
 				E22941E61AC11F56000A83AF /* Views */,
 				E21A88DC1A942CCA00255AC3 /* Components */,
 				E22941D21AC11E31000A83AF /* Utilities */,
@@ -1129,6 +1164,7 @@
 				E267E1CA1B84D80500BAB377 /* GCRepository+Bare.h in Headers */,
 				E267E1CB1B84D80500BAB377 /* GCRepository+Config.h in Headers */,
 				E267E1CC1B84D80500BAB377 /* GCRepository+HEAD.h in Headers */,
+				DC6737A01C4DEF2A0044476C /* pmh_definitions.h in Headers */,
 				E267E1CD1B84D80500BAB377 /* GCRepository+Mock.h in Headers */,
 				E267E1CE1B84D80500BAB377 /* GCRepository+Reflog.h in Headers */,
 				E267E1CF1B84D80500BAB377 /* GCRepository+Reset.h in Headers */,
@@ -1170,6 +1206,8 @@
 				E267E2531B84DC7D00BAB377 /* GIDiffViewController.h in Headers */,
 				E267E2541B84DC7D00BAB377 /* GIMapViewController.h in Headers */,
 				E267E2551B84DC7D00BAB377 /* GIMapViewController+Operations.h in Headers */,
+				DC6737A51C4DEF2A0044476C /* HGMarkdownHighlightingStyle.h in Headers */,
+				DC6737A21C4DEF2A0044476C /* pmh_parser.h in Headers */,
 				E267E2561B84DC7D00BAB377 /* GIQuickViewController.h in Headers */,
 				E267E2571B84DC7D00BAB377 /* GISimpleCommitViewController.h in Headers */,
 				E267E2581B84DC7D00BAB377 /* GIStashListViewController.h in Headers */,
@@ -1180,9 +1218,11 @@
 				E267E2CF1B84F29F00BAB377 /* XLFacilityMacros.h in Headers */,
 				E267E2D01B84F29F00BAB377 /* XLFileLogger.h in Headers */,
 				E267E2D11B84F29F00BAB377 /* XLFunctions.h in Headers */,
+				DC67379F1C4DEF2A0044476C /* pmh_styleparser.h in Headers */,
 				E267E2D21B84F29F00BAB377 /* XLLogger.h in Headers */,
 				E267E2D31B84F29F00BAB377 /* XLLogRecord.h in Headers */,
 				E267E2D41B84F29F00BAB377 /* XLStandardLogger.h in Headers */,
+				DC6737A31C4DEF2A0044476C /* HGMarkdownHighlighter.h in Headers */,
 				E267E2D51B84F29F00BAB377 /* XLDatabaseLogger.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1448,6 +1488,7 @@
 				E267E1DD1B84D83100BAB377 /* GCReferenceTransform.m in Sources */,
 				E267E1DF1B84D83100BAB377 /* GCRemote.m in Sources */,
 				E267E1E01B84D83100BAB377 /* GCRepository.m in Sources */,
+				DC67379E1C4DEF2A0044476C /* pmh_styleparser.c in Sources */,
 				E267E1E11B84D83100BAB377 /* GCRepository+Bare.m in Sources */,
 				E267E1E21B84D83100BAB377 /* GCRepository+Config.m in Sources */,
 				E267E1E31B84D83100BAB377 /* GCRepository+HEAD.m in Sources */,
@@ -1496,10 +1537,13 @@
 				E267E2601B84DCA100BAB377 /* GIMapViewController.m in Sources */,
 				E267E2611B84DCA100BAB377 /* GIMapViewController+Operations.m in Sources */,
 				E267E2621B84DCA100BAB377 /* GIQuickViewController.m in Sources */,
+				DC6737A61C4DEF2A0044476C /* HGMarkdownHighlightingStyle.m in Sources */,
+				DC6737A11C4DEF2A0044476C /* pmh_parser.c in Sources */,
 				E267E2631B84DCA100BAB377 /* GISimpleCommitViewController.m in Sources */,
 				E267E2641B84DCA100BAB377 /* GIStashListViewController.m in Sources */,
 				E267E2D61B84F2BE00BAB377 /* XLASLLogger.m in Sources */,
 				E267E2D71B84F2BE00BAB377 /* XLCallbackLogger.m in Sources */,
+				DC6737AC1C4DF6890044476C /* HGMarkdownHighlighter.m in Sources */,
 				E267E2D81B84F2BE00BAB377 /* XLFacility.m in Sources */,
 				E267E2D91B84F2BE00BAB377 /* XLFileLogger.m in Sources */,
 				E267E2DA1B84F2BE00BAB377 /* XLFunctions.m in Sources */,
