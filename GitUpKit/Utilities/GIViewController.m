@@ -186,6 +186,15 @@
   [alert beginSheetModalForWindow:self.view.window withCompletionHandler:handler];
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme{
+  _darkTheme = darkTheme;
+  [self.childViewControllers enumerateObjectsUsingBlock:^(__kindof NSViewController * _Nonnull child, NSUInteger idx, BOOL * _Nonnull stop) {
+    if ([child isKindOfClass:[GIViewController class]]) {
+      [(GIViewController *)child setDarkTheme:darkTheme];
+    }
+  }];
+}
+
 #pragma mark - NSTextFieldDelegate
 
 - (BOOL)control:(NSControl*)control textView:(NSTextView*)textView doCommandBySelector:(SEL)commandSelector {

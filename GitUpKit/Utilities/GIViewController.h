@@ -27,6 +27,7 @@
 @property(nonatomic, readonly, getter=isViewVisible) BOOL viewVisible;
 @property(nonatomic, readonly, getter=isLiveResizing) BOOL liveResizing;
 @property(nonatomic, readonly) GIWindowController* windowController;
+@property(nonatomic) BOOL darkTheme;
 - (instancetype)initWithRepository:(GCLiveRepository*)repository;
 - (void)presentAlert:(NSAlert*)alert completionHandler:(void (^)(NSInteger returnCode))handler;
 @end
@@ -60,4 +61,5 @@
 - (void)repositoryStashesDidUpdate;  // Default implementation does nothing
 - (void)repositoryStatusDidUpdate;  // Default implementation does nothing
 - (void)repositorySnapshotsDidUpdate;  // Default implementation does nothing
+
 @end

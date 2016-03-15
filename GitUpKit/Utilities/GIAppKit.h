@@ -49,6 +49,7 @@ extern NSString* const GICommitMessageViewUserDefaultKey_EnableSpellChecking;
 @end
 
 @interface GITextView : NSTextView
+@property(nonatomic) BOOL darkTheme;
 @end
 
 @class HGMarkdownHighlighter;

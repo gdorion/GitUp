@@ -143,6 +143,16 @@ static NSColor* _separatorColor = nil;
   [super doCommandBySelector:selector];
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme{
+  _darkTheme = darkTheme;
+  if (_darkTheme) {
+    self.textColor = [NSColor whiteColor];
+    self.backgroundColor = [NSColor blackColor];
+  } else {
+    self.textColor = [NSColor blackColor];
+    self.backgroundColor = [NSColor whiteColor];
+  }
+}
 @end
 
 @implementation GICommitMessageView
@@ -199,6 +209,53 @@ static NSColor* _separatorColor = nil;
      [alert runModal];
    }];
   [_mdHighlighter activate];
+}
+
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  NSString *styleName;
+  
+  if (self.darkTheme) {
+    styleName = @"darkTheme";
+    [self setSelectedTextAttributes:
+     [NSDictionary dictionaryWithObjectsAndKeys:
+      [NSColor darkGrayColor], NSBackgroundColorAttributeName,
+      [NSColor whiteColor], NSForegroundColorAttributeName,
+      nil]];
+    
+  } else {
+    styleName = @"lightTheme";
+    [self setSelectedTextAttributes: 
+     [NSDictionary dictionaryWithObjectsAndKeys:
+      [NSColor selectedTextBackgroundColor], NSBackgroundColorAttributeName,
+      [NSColor selectedTextColor], NSForegroundColorAttributeName,
+      nil]];
+  }
+  
+  NSString *styleFilePath = [[NSBundle mainBundle] pathForResource:styleName
+                                                            ofType:@"style"];
+  NSString *styleContents = [NSString stringWithContentsOfFile:styleFilePath
+                                                        encoding:NSUTF8StringEncoding
+                                                           error:NULL];
+  
+  [_mdHighlighter
+   applyStylesFromStylesheet:styleContents
+   withErrorHandler:^(NSArray *errorMessages) {
+     NSMutableString *errorsInfo = [NSMutableString string];
+     for (NSString *str in errorMessages)
+     {
+       [errorsInfo appendString:@"• "];
+       [errorsInfo appendString:str];
+       [errorsInfo appendString:@"\n"];
+     }
+     
+     NSAlert *alert = [NSAlert alertWithMessageText:@"There were some errors when parsing the stylesheet:"
+                                      defaultButton:@"Ok"
+                                    alternateButton:nil
+                                        otherButton:nil
+                          informativeTextWithFormat:@"%@", errorsInfo];
+     [alert runModal];
+   }];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

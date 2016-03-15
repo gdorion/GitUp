@@ -43,6 +43,9 @@
 }
 
 - (void)_updateInterface {
+  [_messageTextView setDarkTheme:self.darkTheme];
+  [_otherMessageTextView setDarkTheme:self.darkTheme];
+  
   GCCommit* headCommit = nil;
   GCLocalBranch* branch = nil;
   [self.repository lookupHEADCurrentCommit:&headCommit branch:&branch error:NULL];  // Ignore errors

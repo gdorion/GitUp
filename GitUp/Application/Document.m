@@ -308,8 +308,8 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   }
   
   _mapViewController = [[GIMapViewController alloc] initWithRepository:_repository];
+  [_mapViewController setDarkTheme:darkThemeEnabled];
   _mapViewController.delegate = self;
-  [_mapViewController setEnableDarkTheme:[[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKey_EnableDarkTheme]];
   [_mapControllerView replaceWithView:_mapViewController.view];
   _mapView.frame = _mapContainerView.bounds;
   [_mapContainerView addSubview:_mapView];
@@ -317,48 +317,60 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   [self _updateStatusBar];
   
   _tagsViewController = [[GICommitListViewController alloc] initWithRepository:_repository];
+  [_tagsViewController setDarkTheme:darkThemeEnabled];
   _tagsViewController.delegate = self;
   _tagsViewController.emptyLabel = NSLocalizedString(@"No Tags", nil);
   [_tagsControllerView replaceWithView:_tagsViewController.view];
   
   _snapshotListViewController = [[GISnapshotListViewController alloc] initWithRepository:_repository];
+  [_snapshotListViewController setDarkTheme:darkThemeEnabled];
   _snapshotListViewController.delegate = self;
   [_snapshotsControllerView replaceWithView:_snapshotListViewController.view];
   
   _unifiedReflogViewController = [[GIUnifiedReflogViewController alloc] initWithRepository:_repository];
+  [_unifiedReflogViewController setDarkTheme:darkThemeEnabled];
   _unifiedReflogViewController.delegate = self;
   [_reflogControllerView replaceWithView:_unifiedReflogViewController.view];
   
   _ancestorsViewController = [[GICommitListViewController alloc] initWithRepository:_repository];
+  [_ancestorsViewController setDarkTheme:darkThemeEnabled];
   _ancestorsViewController.delegate = self;
   [_ancestorsControllerView replaceWithView:_ancestorsViewController.view];
   
   _searchResultsViewController = [[GICommitListViewController alloc] initWithRepository:_repository];
+  [_searchResultsViewController setDarkTheme:darkThemeEnabled];
   _searchResultsViewController.delegate = self;
   _searchResultsViewController.emptyLabel = NSLocalizedString(@"No Results", nil);
   [_searchControllerView replaceWithView:_searchResultsViewController.view];
   
   _quickViewController = [[GIQuickViewController alloc] initWithRepository:_repository];
+  [_quickViewController setDarkTheme:darkThemeEnabled];
+
   NSTabViewItem* quickItem = [_mainTabView tabViewItemAtIndex:[_mainTabView indexOfTabViewItemWithIdentifier:kWindowModeString_Map_QuickView]];
   quickItem.view = _quickViewController.view;
   
   _diffViewController = [[GIDiffViewController alloc] initWithRepository:_repository];
+  [_diffViewController setDarkTheme:darkThemeEnabled];
   NSTabViewItem* diffItem = [_mainTabView tabViewItemAtIndex:[_mainTabView indexOfTabViewItemWithIdentifier:kWindowModeString_Map_Diff]];
   diffItem.view = _diffViewController.view;
   
   _commitRewriterViewController = [[GICommitRewriterViewController alloc] initWithRepository:_repository];
+  [_commitRewriterViewController setDarkTheme:darkThemeEnabled];
   _commitRewriterViewController.delegate = self;
   [_rewriteControllerView replaceWithView:_commitRewriterViewController.view];
   NSTabViewItem* rewriteItem = [_mainTabView tabViewItemAtIndex:[_mainTabView indexOfTabViewItemWithIdentifier:kWindowModeString_Map_Rewrite]];
   rewriteItem.view = _rewriteView;
   
   _commitSplitterViewController = [[GICommitSplitterViewController alloc] initWithRepository:_repository];
+  [_commitSplitterViewController setDarkTheme:darkThemeEnabled];
   _commitSplitterViewController.delegate = self;
   [_splitControllerView replaceWithView:_commitSplitterViewController.view];
   NSTabViewItem* splitItem = [_mainTabView tabViewItemAtIndex:[_mainTabView indexOfTabViewItemWithIdentifier:kWindowModeString_Map_Split]];
   splitItem.view = _splitView;
   
   _conflictResolverViewController = [[GIConflictResolverViewController alloc] initWithRepository:_repository];
+  [_conflictResolverViewController setDarkTheme:darkThemeEnabled];
+
   _conflictResolverViewController.delegate = self;
   [_resolveControllerView replaceWithView:_conflictResolverViewController.view];
   NSTabViewItem* resolveItem = [_mainTabView tabViewItemAtIndex:[_mainTabView indexOfTabViewItemWithIdentifier:kWindowModeString_Map_Resolve]];
@@ -369,19 +381,24 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   } else {
     _commitViewController = [[GIAdvancedCommitViewController alloc] initWithRepository:_repository];
   }
+  
+  [_commitViewController setDarkTheme:darkThemeEnabled];
+  
   _commitViewController.delegate = self;
   NSTabViewItem* commitItem = [_mainTabView tabViewItemAtIndex:[_mainTabView indexOfTabViewItemWithIdentifier:kWindowModeString_Commit]];
   commitItem.view = _commitViewController.view;
   
   _stashListViewController = [[GIStashListViewController alloc] initWithRepository:_repository];
+  [_stashListViewController setDarkTheme:darkThemeEnabled];
   NSTabViewItem* stashesItem = [_mainTabView tabViewItemAtIndex:[_mainTabView indexOfTabViewItemWithIdentifier:kWindowModeString_Stashes]];
   stashesItem.view = _stashListViewController.view;
   
   _configViewController = [[GIConfigViewController alloc] initWithRepository:_repository];
+  [_configViewController setDarkTheme:darkThemeEnabled];
   NSTabViewItem* configItem = [_mainTabView tabViewItemAtIndex:[_mainTabView indexOfTabViewItemWithIdentifier:kWindowModeString_Map_Config]];
   configItem.view = _configViewController.view;
   
-  if([[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKey_EnableDarkTheme]) {
+  if(darkThemeEnabled) {
     _hiddenWarningView.layer.backgroundColor = [[NSColor colorWithDeviceRed:1 green:1 blue:1 alpha:0.5] CGColor];
   } else {
     _hiddenWarningView.layer.backgroundColor = [[NSColor colorWithDeviceRed:0.0 green:0.0 blue:0.0 alpha:0.5] CGColor];

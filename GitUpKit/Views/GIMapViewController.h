@@ -39,8 +39,6 @@
 - (GINode*)nodeForCommit:(GCCommit*)commit;
 - (NSPoint)positionInViewForCommit:(GCCommit*)commit;
 
-- (void)setEnableDarkTheme:(BOOL)enableDarkTheme;
-
 - (IBAction)toggleTagLabels:(id)sender;
 - (IBAction)toggleBranchLabels:(id)sender;
 - (IBAction)toggleVirtualTips:(id)sender;

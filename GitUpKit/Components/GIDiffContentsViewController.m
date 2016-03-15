@@ -124,7 +124,6 @@ NSString* const GIDiffContentsViewControllerUserDefaultKey_DiffViewMode = @"GIDi
   [_backgroundColor set];
   
   CGContextFillRect(context, dirtyRect);
-  
   CGContextSetBlendMode(context, kCGBlendModeMultiply);
   CGContextMoveToPoint(context, bounds.origin.x, bounds.origin.y + 0.5);
   CGContextAddLineToPoint(context, bounds.origin.x + bounds.size.width, bounds.origin.y + 0.5);
@@ -210,19 +209,7 @@ static NSColor* _DimColor(NSColor* color) {
 }
 
 + (void)initialize {
-  _conflictBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(255.0 / 255.0) green:(132.0 / 255.0) blue:(0.0 / 255.0) alpha:1.0]);
-  _addedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(75.0 / 255.0) green:(138.0 / 255.0) blue:(231.0 / 255.0) alpha:1.0]);
-  _modifiedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(119.0 / 255.0) green:(178.0 / 255.0) blue:(85.0 / 255.0) alpha:1.0]);
-  _deletedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(241.0 / 255.0) green:(115.0 / 255.0) blue:(116.0 / 255.0) alpha:1.0]);
-  _renamedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(133.0 / 255.0) green:(96.0 / 255.0) blue:(168.0 / 255.0) alpha:1.0]);
-  _untrackedBackgroundColor = [NSColor colorWithDeviceRed:0.75 green:0.75 blue:0.75 alpha:1.0];
   
-  _conflictImage = [[NSBundle bundleForClass:[GIDiffContentsViewController class]] imageForResource:@"icon_file_conflict"];
-  _addedImage = [[NSBundle bundleForClass:[GIDiffContentsViewController class]] imageForResource:@"icon_file_a"];
-  _modifiedImage = [[NSBundle bundleForClass:[GIDiffContentsViewController class]] imageForResource:@"icon_file_m"];
-  _deletedImage = [[NSBundle bundleForClass:[GIDiffContentsViewController class]] imageForResource:@"icon_file_d"];
-  _renamedImage = [[NSBundle bundleForClass:[GIDiffContentsViewController class]] imageForResource:@"icon_file_r"];
-  _untrackedImage = [[NSBundle bundleForClass:[GIDiffContentsViewController class]] imageForResource:@"icon_file_u"];
 }
 
 - (instancetype)initWithRepository:(GCLiveRepository*)repository {
@@ -247,8 +234,9 @@ static NSColor* _DimColor(NSColor* color) {
 - (void)loadView {
   [super loadView];
   
+  
+  
   _tableView.controller = self;
-  _tableView.backgroundColor = [NSColor colorWithDeviceRed:0.98 green:0.98 blue:0.98 alpha:1.0];
   
   _emptyTextField.stringValue = @"";
   
@@ -281,6 +269,7 @@ static NSColor* _DimColor(NSColor* color) {
     Class diffViewClass = [self _diffViewClassForChange:data.delta.change];
     if (![data.diffView isKindOfClass:diffViewClass]) {
       GIDiffView* diffView = [[diffViewClass alloc] initWithFrame:NSZeroRect];
+      [diffView setDarkTheme:self.darkTheme];
       diffView.delegate = self;
       diffView.patch = data.diffView.patch;
       data.diffView.delegate = nil;
@@ -292,6 +281,31 @@ static NSColor* _DimColor(NSColor* color) {
   if (reload) {
     [_tableView reloadData];
   }
+}
+
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  
+  if(self.darkTheme) {
+    _tableView.backgroundColor = [NSColor colorWithDeviceRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+    _conflictBackgroundColor = _DimColor([NSColor colorWithDeviceRed:137.5 / 255.0 green:59.8 / 255.0 blue:3.1 / 255.0 alpha:1.0]);
+    _addedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:31.3 / 255.0 green:60.2 / 255.0 blue:119.0 / 255.0 alpha:1.0]);
+    _modifiedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:12.1 / 255.0 green:123.6 / 255.0 blue:17.7 / 255.0 alpha:1.0]);
+    _deletedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:138.5 / 255.0 green:24.4 / 255.0 blue:32.6 / 255.0 alpha:1.0]);
+    _renamedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:77.9 / 255.0 green:49.6 / 255.0 blue:104.3 / 255.0 alpha:1.0]);
+    _untrackedBackgroundColor = [NSColor colorWithDeviceRed:0.3334 green:0.3334 blue:0.3334 alpha:1.0];
+    
+  } else {
+    _tableView.backgroundColor = [NSColor colorWithDeviceRed:0 green:0 blue:0 alpha:1.0];
+    _conflictBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(255.0 / 255.0) green:(132.0 / 255.0) blue:(0.0 / 255.0) alpha:1.0]);
+    _addedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(75.0 / 255.0) green:(138.0 / 255.0) blue:(231.0 / 255.0) alpha:1.0]);
+    _modifiedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(119.0 / 255.0) green:(178.0 / 255.0) blue:(85.0 / 255.0) alpha:1.0]);
+    _deletedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(241.0 / 255.0) green:(115.0 / 255.0) blue:(116.0 / 255.0) alpha:1.0]);
+    _renamedBackgroundColor = _DimColor([NSColor colorWithDeviceRed:(133.0 / 255.0) green:(96.0 / 255.0) blue:(168.0 / 255.0) alpha:1.0]);
+    _untrackedBackgroundColor = [NSColor colorWithDeviceRed:0.75 green:0.75 blue:0.75 alpha:1.0];
+    
+  }
+  [self _updateDiffViews];
 }
 
 - (void)viewDidResize {
@@ -371,6 +385,7 @@ static NSColor* _DimColor(NSColor* color) {
               data.empty = !isBinary;
             } else {
               GIDiffView* diffView = [[[self _diffViewClassForChange:delta.change] alloc] initWithFrame:NSZeroRect];
+              [diffView setDarkTheme:self.darkTheme];
               diffView.delegate = self;
               diffView.patch = patch;
               data.diffView = diffView;

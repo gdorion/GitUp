@@ -76,6 +76,11 @@ const char* GIDiffViewMissingNewlinePlaceholder = "🚫\n";
   GIDiffViewPlainTextColor = [NSColor blackColor];
 }
 
+- (void)setDarkTheme:(BOOL)darkTheme{
+  _darkTheme = darkTheme;
+  [self didFinishInitializing];
+}
+
 - (void)_windowKeyDidChange:(NSNotification*)notification {
   if ([self hasSelection]) {
     [self setNeedsDisplay:YES];  // TODO: Only redraw what's needed
@@ -95,7 +100,33 @@ const char* GIDiffViewMissingNewlinePlaceholder = "🚫\n";
 }
 
 - (void)didFinishInitializing {
-  _backgroundColor = [NSColor whiteColor];
+  if (_darkTheme) {
+    _backgroundColor = [NSColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+
+    GIDiffViewDeletedBackgroundColor = [NSColor colorWithDeviceRed:0.9859 green:0.0 blue:0.0394 alpha:0.355152027027027];
+    GIDiffViewDeletedHighlightColor = [NSColor colorWithDeviceRed:0.9693 green:0.0 blue:0.1403 alpha:0.573426942567568];
+    GIDiffViewAddedBackgroundColor = [NSColor colorWithDeviceRed:0.2055 green:1.0 blue:0.1503 alpha:0.258023648648649];
+    GIDiffViewAddedHighlightColor = [NSColor colorWithDeviceRed:0.226 green:1.0 blue:0.1766 alpha:0.260689400337838];
+    GIDiffViewSeparatorBackgroundColor = [NSColor colorWithDeviceRed:0.2017 green:0.9899 blue:0.1498 alpha:0.0900812922297297];
+    GIDiffViewSeparatorLineColor = [NSColor colorWithDeviceRed:0.3972 green:0.3972 blue:0.3972 alpha:0.386507601351351];
+    GIDiffViewSeparatorTextColor = [NSColor colorWithDeviceRed:0.6666 green:0.6665 blue:0.6666 alpha:0.597814611486487];
+    GIDiffViewVerticalLineColor = [NSColor colorWithDeviceRed:0.8151 green:0.815 blue:0.8151 alpha:0.348759501689189];
+    GIDiffViewLineNumberColor = [NSColor colorWithDeviceRed:0.6973 green:0.6972 blue:0.6972 alpha:0.371172930743243];
+    GIDiffViewPlainTextColor = [NSColor colorWithRed:0.9734 green:0.9734 blue:0.9734 alpha:1.0];
+  } else {
+    _backgroundColor = [NSColor whiteColor];
+
+    GIDiffViewDeletedBackgroundColor = [NSColor colorWithDeviceRed:1.0 green:0.9 blue:0.9 alpha:1.0];
+    GIDiffViewDeletedHighlightColor = [NSColor colorWithDeviceRed:1.0 green:0.7 blue:0.7 alpha:1.0];
+    GIDiffViewAddedBackgroundColor = [NSColor colorWithDeviceRed:0.85 green:1.0 blue:0.85 alpha:1.0];
+    GIDiffViewAddedHighlightColor = [NSColor colorWithDeviceRed:0.7 green:1.0 blue:0.7 alpha:1.0];
+    GIDiffViewSeparatorBackgroundColor = [NSColor colorWithDeviceRed:0.97 green:0.97 blue:0.97 alpha:1.0];
+    GIDiffViewSeparatorLineColor = [NSColor colorWithDeviceRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+    GIDiffViewSeparatorTextColor = [NSColor colorWithDeviceRed:0.65 green:0.65 blue:0.65 alpha:1.0];
+    GIDiffViewVerticalLineColor = [NSColor colorWithDeviceRed:0.85 green:0.85 blue:0.85 alpha:0.6];
+    GIDiffViewLineNumberColor = [NSColor colorWithDeviceRed:0.75 green:0.75 blue:0.75 alpha:1.0];
+    GIDiffViewPlainTextColor = [NSColor blackColor];
+  }
 }
 
 - (instancetype)initWithFrame:(NSRect)frameRect {
