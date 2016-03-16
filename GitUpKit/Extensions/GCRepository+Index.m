@@ -38,14 +38,6 @@
   return [self writeRepositoryIndex:index error:error];
 }
 
-- (BOOL)removeFileFromIndex:(NSString*)path error:(NSError**)error {
-  GCIndex* index = [self readRepositoryIndex:error];
-  if (index == nil) {
-    return NO;
-  }
-  return [self removeFile:path fromIndex:index error:error] && [self writeRepositoryIndex:index error:error];
-}
-
 - (BOOL)removeFilesFromIndex:(NSArray<NSString *> *)paths error:(NSError**)error {
   GCIndex* index = [self readRepositoryIndex:error];
   if (index == nil) {
@@ -53,9 +45,8 @@
   }
   
   for (NSString *path in paths) {
-    if (![self removeFile:path fromIndex:index error:error]) {
-      return false;
-    }else if (error) {
+    if (![self removeFile:path fromIndex:index error:error] || error) {
+      [self writeRepositoryIndex:index error:error];
       return false;
     }
   }
@@ -80,7 +71,7 @@
   for (NSString *path in paths) {
     if (![self addFileInWorkingDirectory:path toIndex:index error:error]) {
       return false;
-    }else if (*error) {
+    }else if (error != nil) {
       return false;
     }
   }

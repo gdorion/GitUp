@@ -443,7 +443,7 @@
   [lines removeObjectAtIndex:90];
   [self updateFileAtPath:@"lines2.txt" withString:[lines componentsJoinedByString:@"\n" ]];
   XCTAssertTrue([[NSFileManager defaultManager] removeItemAtPath:[self.repository.workingDirectoryPath stringByAppendingPathComponent:@"lines.txt"] error:NULL]);
-  XCTAssertTrue([self.repository removeFileFromIndex:@"lines.txt" error:NULL]);
+  XCTAssertTrue([self.repository removeFilesFromIndex:@[@"lines.txt"] error:NULL]);
   XCTAssertTrue([self.repository addFileToIndex:@"lines2.txt" error:NULL]);
   GCCommit* commit4 = [self.repository createCommitFromHEADWithMessage:@"2) Modified and renamed" error:NULL];
   XCTAssertNotNil(commit4);

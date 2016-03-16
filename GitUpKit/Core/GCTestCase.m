@@ -178,7 +178,7 @@ static const void* _associatedObjectKey = &_associatedObjectKey;
 
 - (GCCommit*)makeCommitWithDeletedFileAtPath:(NSString*)path message:(NSString*)message {
   [self deleteFileAtPath:path];
-  XCTAssertTrue([self.repository removeFileFromIndex:path error:NULL]);
+  XCTAssertTrue([self.repository removeFilesFromIndex:@[path] error:NULL]);
   GCCommit* commit = [self.repository createCommitFromHEADWithMessage:message error:NULL];
   XCTAssertNotNil(commit);
   return commit;

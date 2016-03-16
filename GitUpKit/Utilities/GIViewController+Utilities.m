@@ -140,7 +140,7 @@ static NSString* _diffTemporaryDirectoryPath = nil;
 - (void)stageAllChangesForFile:(NSString*)path {
   NSError* error;
   BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[self.repository absolutePathForFile:path]];
-  if ((fileExists && [self.repository addFileToIndex:path error:&error]) || (!fileExists && [self.repository removeFileFromIndex:path error:&error])) {
+  if ((fileExists && [self.repository addFileToIndex:path error:&error]) || (!fileExists && [self.repository removeFilesFromIndex:@[path] error:&error])) {
     [self.repository notifyRepositoryChanged];
   } else {
     [self presentError:error];

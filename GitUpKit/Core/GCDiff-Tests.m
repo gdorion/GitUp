@@ -168,8 +168,8 @@
   
   // Stage some files
   XCTAssertTrue([self.repository addFileToIndex:@"modified.txt" error:NULL]);
-  XCTAssertTrue([self.repository removeFileFromIndex:@"deleted.txt" error:NULL]);
-  XCTAssertTrue([self.repository removeFileFromIndex:@"renamed1.txt" error:NULL]);
+  NSArray *files = @[@"deleted.txt", @"renamed1.txt"];
+  XCTAssertTrue([self.repository removeFilesFromIndex:files error:NULL]);
   XCTAssertTrue([self.repository addFileToIndex:@"renamed2.txt" error:NULL]);
   XCTAssertTrue([self.repository addFileToIndex:@"added.txt" error:NULL]);
   
