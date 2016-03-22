@@ -342,15 +342,17 @@
 
 - (BOOL)diffFilesViewController:(GIDiffFilesViewController*)controller didReceiveDeltas:(NSArray*)deltas fromOtherController:(GIDiffFilesViewController*)otherController {
   if ((controller == _workdirFilesViewController) && (otherController == _indexFilesViewController)) {
+    NSMutableArray *fileDeltas = [NSMutableArray array];
     for (GCDiffDelta* delta in deltas) {
       if (![_indexConflicts objectForKey:delta.canonicalPath]) {
         if (delta.submodule) {
           [self unstageSubmoduleAtPath:delta.canonicalPath];
         } else {
-          [self unstageAllChangesForFile:delta.canonicalPath];
+          [fileDeltas addObject:delta.canonicalPath];
         }
       }
     }
+    [self unstageAllChangesForFiles:fileDeltas];
     _disableFeedback = YES;
     _workdirFilesViewController.selectedDeltas = deltas;
     _disableFeedback = NO;
@@ -360,15 +362,17 @@
     }
     return YES;
   } else if ((controller == _indexFilesViewController) && (otherController == _workdirFilesViewController)) {
+    NSMutableArray *fileDeltas = [NSMutableArray array];
     for (GCDiffDelta* delta in deltas) {
       if (![_indexConflicts objectForKey:delta.canonicalPath]) {
         if (delta.submodule) {
           [self stageSubmoduleAtPath:delta.canonicalPath];
         } else {
-          [self stageAllChangesForFile:delta.canonicalPath];
+          [fileDeltas addObject:delta.canonicalPath];
         }
       }
     }
+    [self stageAllChangesForFiles:fileDeltas];
     _disableFeedback = YES;
     _indexFilesViewController.selectedDeltas = deltas;
     _disableFeedback = NO;

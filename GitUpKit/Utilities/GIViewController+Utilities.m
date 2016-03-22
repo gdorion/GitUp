@@ -108,7 +108,7 @@ static NSString* _diffTemporaryDirectoryPath = nil;
 
 - (void)unstageSubmoduleAtPath:(NSString*)path {
   NSError* error;
-  if ([self.repository resetFileInIndexToHEAD:path error:&error]) {
+  if ([self.repository resetFilesInIndexToHEAD:@[path] error:&error]) {
     [self.repository notifyRepositoryChanged];
   } else {
     [self presentError:error];
@@ -117,7 +117,7 @@ static NSString* _diffTemporaryDirectoryPath = nil;
 
 - (BOOL)discardSubmoduleAtPath:(NSString*)path resetIndex:(BOOL)resetIndex error:(NSError**)error {
   GCSubmodule* submodule = [self.repository lookupSubmoduleWithName:path error:error];
-  return submodule && (!resetIndex || [self.repository resetFileInIndexToHEAD:path error:error]) && [self.repository updateSubmodule:submodule force:YES error:error];
+  return submodule && (!resetIndex || [self.repository resetFilesInIndexToHEAD:@[path] error:error]) && [self.repository updateSubmodule:submodule force:YES error:error];
 }
 
 - (void)discardSubmoduleAtPath:(NSString*)path resetIndex:(BOOL)resetIndex {
@@ -138,13 +138,6 @@ static NSString* _diffTemporaryDirectoryPath = nil;
 }
 
 - (void)stageAllChangesForFile:(NSString*)path {
-  NSError* error;
-  BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[self.repository absolutePathForFile:path]];
-  if ((fileExists && [self.repository addFileToIndex:path error:&error]) || (!fileExists && [self.repository removeFilesFromIndex:@[path] error:&error])) {
-    [self.repository notifyRepositoryChanged];
-  } else {
-    [self presentError:error];
-  }
 }
 
 - (void)stageAllChangesForFiles:(NSArray<NSString *> *)paths {
@@ -225,7 +218,7 @@ static NSString* _diffTemporaryDirectoryPath = nil;
   BOOL success = NO;
   if (resetIndex) {
     GCCommit* commit;
-    if ([self.repository lookupHEADCurrentCommit:&commit branch:NULL error:error] && [self.repository resetFileInIndexToHEAD:path error:error]) {
+    if ([self.repository lookupHEADCurrentCommit:&commit branch:NULL error:error] && [self.repository resetFilesInIndexToHEAD:@[path] error:error]) {
       if (commit && [self.repository checkTreeForCommit:commit containsFile:path error:NULL]) {
         success = [self.repository safeDeleteFileIfExists:path error:error] && [self.repository checkoutFileFromIndex:path error:error];
       } else {
@@ -256,7 +249,7 @@ static NSString* _diffTemporaryDirectoryPath = nil;
 }
 
 - (BOOL)discardSelectedChangesForFile:(NSString*)path oldLines:(NSIndexSet*)oldLines newLines:(NSIndexSet*)newLines resetIndex:(BOOL)resetIndex error:(NSError**)error {
-  if (resetIndex && ![self.repository resetFileInIndexToHEAD:path error:error]) {
+  if (resetIndex && ![self.repository resetFilesInIndexToHEAD:@[path] error:error]) {
     return NO;
   }
   return [self.repository checkoutLinesFromFileFromIndex:path error:error usingFilter:^BOOL(GCLineDiffChange change, NSUInteger oldLineNumber, NSUInteger newLineNumber) {
