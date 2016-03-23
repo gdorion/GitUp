@@ -282,14 +282,25 @@
                  suppressionUserDefaultKey:nil
                                      block:^{
         
+        NSMutableArray *selectedFiles = [NSMutableArray array];
         for (GCDiffDelta* delta in deltas) {
           NSError* error;
           BOOL submodule = delta.submodule;
-          if ((submodule && ![self discardSubmoduleAtPath:delta.canonicalPath resetIndex:NO error:&error]) || (!submodule && ![self discardAllChangesForFile:delta.canonicalPath resetIndex:NO error:&error])) {
-            [self presentError:error];
-            break;
+          if (submodule) {
+            if (![self discardSubmoduleAtPath:delta.canonicalPath resetIndex:NO error:&error]) {
+              [self presentError:error];
+              break;
+            }
+          } else {
+            [selectedFiles addObject:delta.canonicalPath];
           }
         }
+                                       
+        NSError* error;
+        if (![self discardAllChangesForFiles:selectedFiles resetIndex:NO error:&error]) {
+          [self presentError:error];
+        }
+                                       
         [self.repository notifyWorkingDirectoryChanged];
         if (!_workdirFilesViewController.deltas.count) {
           _indexActive = YES;

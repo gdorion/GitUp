@@ -231,6 +231,35 @@ static NSString* _diffTemporaryDirectoryPath = nil;
   return success;
 }
 
+- (BOOL)discardAllChangesForFiles:(NSArray<NSString*>*)paths resetIndex:(BOOL)resetIndex error:(NSError**)error {
+  BOOL success = NO;
+  if (resetIndex) {
+    GCCommit* commit;
+    if ([self.repository lookupHEADCurrentCommit:&commit branch:NULL error:error] && [self.repository resetFilesInIndexToHEAD:paths error:error]) {
+      success = YES;
+      for (NSString *path in paths) {
+        if (commit && [self.repository checkTreeForCommit:commit containsFile:path error:NULL]) {
+          if (![self.repository safeDeleteFileIfExists:path error:error] && [self.repository checkoutFileFromIndex:path error:error]) {
+            return NO;
+          }
+        } else {
+          if (![self.repository safeDeleteFileIfExists:path error:error]) {
+            return NO;
+          }
+        }
+      }
+    }
+  } else {
+    for (NSString *path in paths) {
+      if (![self.repository safeDeleteFileIfExists:path error:error]) {
+        return NO;
+      }
+    }
+    success = [self.repository checkoutFilesFromIndex:paths error:error];
+  }
+  return success;
+}
+
 - (void)discardAllChangesForFile:(NSString*)path resetIndex:(BOOL)resetIndex {
   [self confirmUserActionWithAlertType:kGIAlertType_Stop
                                  title:[NSString stringWithFormat:NSLocalizedString(@"Are you sure you want to discard all changes from the file \"%@\"?", nil), path.lastPathComponent]

@@ -118,6 +118,14 @@
   return [self checkoutFileToWorkingDirectory:path fromIndex:index error:error];
 }
 
+- (BOOL)checkoutFilesFromIndex:(NSArray<NSString*>*)paths error:(NSError**)error {
+  GCIndex* index = [self readRepositoryIndex:error];
+  if (index == nil) {
+    return NO;
+  }
+  return [self checkoutFilesToWorkingDirectory:paths fromIndex:index error:error];
+}
+
 - (BOOL)addLinesFromFileToIndex:(NSString*)path error:(NSError**)error usingFilter:(GCIndexLineFilter)filter {
   GCIndex* index = [self readRepositoryIndex:error];
   if (index == nil) {

@@ -25,6 +25,7 @@
 - (BOOL)resetFileInIndexToHEAD:(NSString*)path error:(NSError**)error;  // git reset --mixed {file} - Copy file from HEAD to index (aka unstage file)
 - (BOOL)resetFilesInIndexToHEAD:(NSArray<NSString *> *)paths error:(NSError**)error;
 - (BOOL)checkoutFileFromIndex:(NSString*)path error:(NSError**)error;  // git checkout {file} - Copy file from index to workdir (aka discard file)
+- (BOOL)checkoutFilesFromIndex:(NSArray<NSString*>*)paths error:(NSError**)error;
 
 - (BOOL)addLinesFromFileToIndex:(NSString*)path error:(NSError**)error usingFilter:(GCIndexLineFilter)filter;  // git add -p {file} - Copy only some lines of file from workdir to index (aka stage lines)
 - (BOOL)resetLinesFromFileInIndexToHEAD:(NSString*)path error:(NSError**)error usingFilter:(GCIndexLineFilter)filter;  // git reset -p {file} - Copy only some lines of file from HEAD to index (aka unstage lines)

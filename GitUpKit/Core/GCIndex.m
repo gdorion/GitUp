@@ -484,6 +484,20 @@ cleanup:
   return YES;
 }
 
+- (BOOL)checkoutFilesToWorkingDirectory:(NSArray<NSString*>*)paths fromIndex:(GCIndex*)index error:(NSError**)error {
+  git_checkout_options options = GIT_CHECKOUT_OPTIONS_INIT;
+  options.checkout_strategy = GIT_CHECKOUT_FORCE | GIT_CHECKOUT_DONT_UPDATE_INDEX | GIT_CHECKOUT_DISABLE_PATHSPEC_MATCH;  // There's no reason to update the index
+  options.paths.count = paths.count;
+  options.paths.strings = (char **)malloc((paths.count + 1) * sizeof(char*));;
+  for (int i = 0; i < (int)paths.count; i++) {
+    const char* filePath = GCGitPathFromFileSystemPath(paths[i]);
+    options.paths.strings[i] = (char*)filePath;
+  }
+  
+  CALL_LIBGIT2_FUNCTION_RETURN(NO, git_checkout_index, self.private, index.private, &options);
+  return YES;
+}
+
 - (BOOL)checkoutLinesInFileToWorkingDirectory:(NSString*)path fromIndex:(GCIndex*)index error:(NSError**)error usingFilter:(GCIndexLineFilter)filter {
   BOOL success = NO;
   const char* fullPath = [[self absolutePathForFile:path] fileSystemRepresentation];
