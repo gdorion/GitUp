@@ -187,7 +187,13 @@ static NSColor* _separatorColor = nil;
   
   _mdHighlighter = [[HGMarkdownHighlighter alloc] initWithTextView:self waitInterval:0.03];
   _mdHighlighter.makeLinksClickable = YES;
-  NSString *styleFilePath = [[NSBundle mainBundle] pathForResource:@"felix"
+  NSString *resourceName = @"lightTheme";
+  
+  if (self.darkTheme) {
+    resourceName = @"darkTheme";
+  }
+  
+  NSString *styleFilePath = [[NSBundle mainBundle] pathForResource:resourceName
                                                             ofType:@"style"];
 		NSString *styleContents = [NSString stringWithContentsOfFile:styleFilePath
                                                         encoding:NSUTF8StringEncoding
@@ -196,8 +202,7 @@ static NSColor* _separatorColor = nil;
    applyStylesFromStylesheet:styleContents
    withErrorHandler:^(NSArray *errorMessages) {
      NSMutableString *errorsInfo = [NSMutableString string];
-     for (NSString *str in errorMessages)
-     {
+     for (NSString *str in errorMessages) {
        [errorsInfo appendString:@"• "];
        [errorsInfo appendString:str];
        [errorsInfo appendString:@"\n"];
