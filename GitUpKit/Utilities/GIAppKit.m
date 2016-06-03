@@ -148,9 +148,11 @@ static NSColor* _separatorColor = nil;
   if (_darkTheme) {
     self.textColor = [NSColor whiteColor];
     self.backgroundColor = [NSColor blackColor];
+    self.insertionPointColor = [NSColor whiteColor];
   } else {
     self.textColor = [NSColor blackColor];
     self.backgroundColor = [NSColor whiteColor];
+    self.insertionPointColor = [NSColor blackColor];
   }
 }
 @end
