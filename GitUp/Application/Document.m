@@ -289,19 +289,21 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   }
   
   BOOL darkThemeEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKey_EnableDarkTheme];
-  _mainWindow.backgroundColor = [NSColor clearColor];
+
   [_mainWindow setToolbar:_toolbar];
   if (_unifiedToolbar) {
     [_mainWindow setTitleVisibility:NSWindowTitleHidden];
   }
   
   if (darkThemeEnabled) {
+    _mainWindow.backgroundColor = [NSColor blackColor];
     _mainWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameVibrantDark];
     _titleTextField.textColor = NSColor.whiteColor;
     _infoTextField0.textColor = NSColor.whiteColor;
     _infoTextField1.textColor = NSColor.whiteColor;
     _infoTextField2.textColor = NSColor.lightGrayColor;
   } else {
+    _mainWindow.backgroundColor = [NSColor clearColor];
     _mainWindow.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     _titleTextField.textColor = NSColor.blackColor;
     _infoTextField0.textColor = NSColor.blackColor;
