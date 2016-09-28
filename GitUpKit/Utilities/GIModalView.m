@@ -123,8 +123,14 @@
   } else
 #endif
   {
-    view.layer.backgroundColor = [[NSColor colorWithDeviceRed:0.95 green:0.95 blue:0.95 alpha:1.0] CGColor];
-    self.layer.backgroundColor = [[NSColor colorWithDeviceRed:0.0 green:0.0 blue:0.0 alpha:0.4] CGColor];
+
+    if (self.darkMode) {
+      view.layer.backgroundColor = [[NSColor colorWithDeviceRed:0.0 green:0.0 blue:0.0 alpha:1.0] CGColor];
+      self.layer.backgroundColor = [[NSColor colorWithDeviceRed:0.5 green:0.5 blue:0.5 alpha:0.4] CGColor];
+    } else {
+      view.layer.backgroundColor = [[NSColor colorWithDeviceRed:0.95 green:0.95 blue:0.95 alpha:1.0] CGColor];
+      self.layer.backgroundColor = [[NSColor colorWithDeviceRed:0.0 green:0.0 blue:0.0 alpha:0.4] CGColor];
+    }
     [self addSubview:view];
     if (handler) {
       dispatch_async(dispatch_get_main_queue(), handler);

@@ -94,6 +94,8 @@ static void _WalkViewTree(NSView* view, NSMutableArray* array) {
 - (void)_selectKeyView:(NSInteger)delta {
   NSMutableArray* array = [[NSMutableArray alloc] init];
   GIModalView* modalView = [self.windowController modalViewIfVisible];
+
+  modalView.darkMode = self.darkMode;
   if (modalView) {
     _WalkViewTree(modalView, array);
   } else {
@@ -329,6 +331,7 @@ static void _TimerCallBack(CFRunLoopTimerRef timer, void* info) {
   }
   [_delegate windowControllerDidChangeHasModalView:self];
 
+  _modalView.darkMode = self.window.darkMode;
   [_modalView presentContentView:view withCompletionHandler:NULL];
 
   [self.window makeFirstResponder:responder];

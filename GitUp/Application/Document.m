@@ -263,6 +263,9 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
 
 - (void)makeWindowControllers {
   _windowController = [[WindowController alloc] initWithWindowNibName:@"Document" owner:self];
+  
+  BOOL darkThemeEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKey_EnableDarkTheme];
+  _windowController.window.darkMode = darkThemeEnabled;
   _windowController.delegate = self;
   [self addWindowController:_windowController];
 }
@@ -289,6 +292,10 @@ static void _CheckTimerCallBack(CFRunLoopTimerRef timer, void* info) {
   }
   
   BOOL darkThemeEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:kUserDefaultsKey_EnableDarkTheme];
+
+  if ([windowController isKindOfClass:[GIWindowController class]]) {
+    ((GIWindowController *)windowController).window.darkMode = darkThemeEnabled;
+  }
 
   [_mainWindow setToolbar:_toolbar];
   if (_unifiedToolbar) {

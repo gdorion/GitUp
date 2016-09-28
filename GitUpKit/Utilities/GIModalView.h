@@ -18,4 +18,5 @@
 @interface GIModalView : NSView
 - (void)presentContentView:(NSView*)view withCompletionHandler:(dispatch_block_t)handler;
 - (void)dismissContentViewWithCompletionHandler:(dispatch_block_t)handler;
+@property (nonatomic) BOOL darkMode;
 @end

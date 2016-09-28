@@ -33,6 +33,7 @@ typedef NS_ENUM(NSUInteger, GIOverlayStyle) {
 #pragma clang diagnostic ignored "-Wproperty-attribute-mismatch"
 #pragma clang diagnostic ignored "-Wincompatible-property-type"
 @property(nonatomic, readonly) GIWindowController* windowController;  // Redeclare superclass property
+@property (nonatomic) BOOL darkMode;
 #pragma clang diagnostic pop
 @end
 
