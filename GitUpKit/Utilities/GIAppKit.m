@@ -24,6 +24,8 @@
 
 #import "XLFacilityMacros.h"
 
+#import "HGMarkdownHighlighter.h"
+
 #define kSummaryMaxWidth 50
 #define kBodyMaxWidth 72
 
@@ -176,6 +178,34 @@ static NSColor* _separatorColor = nil;
   [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:GICommitMessageViewUserDefaultKey_ShowInvisibleCharacters options:0 context:(__bridge void*)[GICommitMessageView class]];
   [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:GICommitMessageViewUserDefaultKey_ShowMargins options:0 context:(__bridge void*)[GICommitMessageView class]];
   [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:GICommitMessageViewUserDefaultKey_EnableSpellChecking options:0 context:(__bridge void*)[GICommitMessageView class]];
+  
+  
+  _mdHighlighter = [[HGMarkdownHighlighter alloc] initWithTextView:self waitInterval:0.03];
+  _mdHighlighter.makeLinksClickable = YES;
+  NSString *styleFilePath = [[NSBundle mainBundle] pathForResource:@"felix"
+                                                            ofType:@"style"];
+		NSString *styleContents = [NSString stringWithContentsOfFile:styleFilePath
+                                                        encoding:NSUTF8StringEncoding
+                                                           error:NULL];
+  [_mdHighlighter
+   applyStylesFromStylesheet:styleContents
+   withErrorHandler:^(NSArray *errorMessages) {
+     NSMutableString *errorsInfo = [NSMutableString string];
+     for (NSString *str in errorMessages)
+     {
+       [errorsInfo appendString:@"• "];
+       [errorsInfo appendString:str];
+       [errorsInfo appendString:@"\n"];
+     }
+     
+     NSAlert *alert = [NSAlert alertWithMessageText:@"There were some errors when parsing the stylesheet:"
+                                      defaultButton:@"Ok"
+                                    alternateButton:nil
+                                        otherButton:nil
+                          informativeTextWithFormat:@"%@", errorsInfo];
+     [alert runModal];
+   }];
+  [_mdHighlighter activate];
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -212,6 +242,7 @@ static NSColor* _separatorColor = nil;
 // WARNING: This is called *several* times when the default has been changed
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
   if (context == (__bridge void*)[GICommitMessageView class]) {
+    //[_mdHighlighter highlightNow];
     if ([keyPath isEqualToString:GICommitMessageViewUserDefaultKey_ShowInvisibleCharacters]) {
       NSRange range = NSMakeRange(0, self.textStorage.length);
       [self.layoutManager invalidateGlyphsForCharacterRange:range changeInLength:0 actualCharacterRange:NULL];
@@ -223,6 +254,7 @@ static NSColor* _separatorColor = nil;
       BOOL flag = [[NSUserDefaults standardUserDefaults] boolForKey:GICommitMessageViewUserDefaultKey_EnableSpellChecking];
       if (flag != self.continuousSpellCheckingEnabled) {
         self.continuousSpellCheckingEnabled = flag;
+        
         [self setNeedsDisplay:YES];  // TODO: Why is this needed to refresh?
       }
     } else {
@@ -318,14 +350,14 @@ static NSColor* _separatorColor = nil;
       switch ([string characterAtIndex:characterIndex]) {
         case ' ': {
           NSFont* font = [storage attribute:NSFontAttributeName atIndex:characterIndex effectiveRange:NULL];
-          XLOG_DEBUG_CHECK([font.fontName isEqualToString:@"Menlo-Regular"]);
+          XLOG_DEBUG_CHECK([font.fontName hasPrefix:@"Menlo-"]);
           [self replaceGlyphAtIndex:glyphIndex withGlyph:[font glyphWithName:@"periodcentered"]];
           break;
         }
 
         case '\n': {
           NSFont* font = [storage attribute:NSFontAttributeName atIndex:characterIndex effectiveRange:NULL];
-          XLOG_DEBUG_CHECK([font.fontName isEqualToString:@"Menlo-Regular"]);
+          XLOG_DEBUG_CHECK([font.fontName hasPrefix:@"Menlo-"]);
           [self replaceGlyphAtIndex:glyphIndex withGlyph:[font glyphWithName:@"carriagereturn"]];
           break;
         }
