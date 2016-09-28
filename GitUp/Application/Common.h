@@ -28,6 +28,7 @@
 #define kUserDefaultsKey_DiffWhitespaceMode @"DiffWhitespaceMode"  // NSUInteger
 #define kUserDefaultsKey_EnableVisualEffects @"EnableVisualEffects"  // BOOL
 #define kUserDefaultsKey_ShowWelcomeWindow @"ShowWelcomeWindow"  // BOOL
+#define kUserDefaultsKey_EnableDarkTheme @"EnableDarkTheme"  // BOOL
 
 #define kRepositoryUserInfoKey_SkipSubmoduleCheck @"SkipSubmoduleCheck"  // BOOL
 #define kRepositoryUserInfoKey_MainWindowFrame @"MainWindowFrame"  // NSString

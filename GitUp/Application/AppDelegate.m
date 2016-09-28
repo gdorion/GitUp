@@ -112,6 +112,7 @@
     kUserDefaultsKey_DiffWhitespaceMode : @(kGCLiveRepositoryDiffWhitespaceMode_Normal),
     kUserDefaultsKey_EnableVisualEffects : @(NO),
     kUserDefaultsKey_ShowWelcomeWindow : @(YES),
+    kUserDefaultsKey_EnableDarkTheme: @(NO),
   };
   [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
