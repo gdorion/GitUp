@@ -35,6 +35,7 @@
 @property(nonatomic, readonly) BOOL hasSelection;
 @property(nonatomic, readonly) BOOL hasSelectedText;
 @property(nonatomic, readonly) BOOL hasSelectedLines;
+@property(nonatomic) BOOL darkTheme;
 - (void)clearSelection;
 - (void)getSelectedText:(NSString**)text oldLines:(NSIndexSet**)oldLines newLines:(NSIndexSet**)newLines;
 @end

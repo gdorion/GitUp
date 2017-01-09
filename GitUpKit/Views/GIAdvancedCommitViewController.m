@@ -51,23 +51,34 @@
   [super loadView];
 
   _workdirFilesViewController = [[GIDiffFilesViewController alloc] initWithRepository:self.repository];
+  //[_workdirFilesViewController setDarkTheme:self.darkTheme];
   _workdirFilesViewController.delegate = self;
   _workdirFilesViewController.allowsMultipleSelection = YES;
   _workdirFilesViewController.emptyLabel = NSLocalizedString(@"No changes in working directory", nil);
   [_workdirFilesView replaceWithView:_workdirFilesViewController.view];
 
   _indexFilesViewController = [[GIDiffFilesViewController alloc] initWithRepository:self.repository];
+  //[_indexFilesViewController setDarkTheme:self.darkTheme];
   _indexFilesViewController.delegate = self;
   _indexFilesViewController.allowsMultipleSelection = YES;
   _indexFilesViewController.emptyLabel = NSLocalizedString(@"No changes in index", nil);
   [_indexFilesView replaceWithView:_indexFilesViewController.view];
 
   _diffContentsViewController = [[GIDiffContentsViewController alloc] initWithRepository:self.repository];
+  //[_diffContentsViewController setDarkTheme:self.darkTheme];
   _diffContentsViewController.delegate = self;
   _diffContentsViewController.emptyLabel = NSLocalizedString(@"No file selected", nil);
   [_diffContentsView replaceWithView:_diffContentsViewController.view];
 
   self.messageTextView.string = @"";
+}
+
+- (void)setDarkTheme:(BOOL)darkTheme {
+  [super setDarkTheme:darkTheme];
+  [_diffContentsViewController setDarkTheme:self.darkTheme];
+  [_indexFilesViewController setDarkTheme:self.darkTheme];
+  [_workdirFilesViewController setDarkTheme:self.darkTheme];
+
 }
 
 - (void)viewWillShow {
