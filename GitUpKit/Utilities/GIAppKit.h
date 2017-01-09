@@ -51,7 +51,11 @@ extern NSString* const GICommitMessageViewUserDefaultKey_EnableSpellChecking;
 @interface GITextView : NSTextView
 @end
 
+@class HGMarkdownHighlighter;
 @interface GICommitMessageView : GITextView
+
+@property(nonatomic) HGMarkdownHighlighter *mdHighlighter;
+
 @end
 
 @interface GITableCellView : NSTableCellView
