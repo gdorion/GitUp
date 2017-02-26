@@ -694,14 +694,29 @@ static NSString* _diffTemporaryDirectoryPath = nil;
   NSMenu* menu = [[NSMenu alloc] initWithTitle:@""];
 
   if (conflict) {
-    [menu addItemWithTitle:NSLocalizedString(@"Resolve in Merge Tool…", nil)
-                     block:^{
-                       [self resolveConflictInMergeTool:conflict];
-                     }];
-    [menu addItemWithTitle:NSLocalizedString(@"Mark as Resolved", nil)
-                     block:^{
-                       [self markConflictAsResolved:conflict];
-                     }];
+    if (delta.submodule) {
+      [menu addItemWithTitle:NSLocalizedString(@"Use base", nil)
+                       block:^{
+                         [self setSubmoduleWithConflict:conflict toReferenceSHA1:conflict.ancestorBlobSHA1];
+                       }];
+      [menu addItemWithTitle:NSLocalizedString(@"Use ours", nil)
+                       block:^{
+                         [self setSubmoduleWithConflict:conflict toReferenceSHA1:conflict.ourBlobSHA1];
+                       }];
+      [menu addItemWithTitle:NSLocalizedString(@"Use theirs", nil)
+                       block:^{
+                         [self setSubmoduleWithConflict:conflict toReferenceSHA1:conflict.theirBlobSHA1];
+                       }];
+    } else {
+      [menu addItemWithTitle:NSLocalizedString(@"Resolve in Merge Tool…", nil)
+                       block:^{
+                         [self resolveConflictInMergeTool:conflict];
+                       }];
+      [menu addItemWithTitle:NSLocalizedString(@"Mark as Resolved", nil)
+                       block:^{
+                         [self markConflictAsResolved:conflict];
+                       }];
+    }
   } else {
     if (GC_FILE_MODE_IS_FILE(delta.oldFile.mode) && GC_FILE_MODE_IS_FILE(delta.newFile.mode)) {
       [menu addItemWithTitle:NSLocalizedString(@"View in Diff Tool…", nil)
@@ -776,6 +791,30 @@ static NSString* _diffTemporaryDirectoryPath = nil;
           GCIndexConflict* conflict = [conflicts objectForKey:delta.canonicalPath];
           if (conflict) {
             [self markConflictAsResolved:conflict];
+          }
+        }
+        return YES;
+      } else if ([characters isEqualToString:@"b"]) {
+        for (GCDiffDelta* delta in deltas) {
+          GCIndexConflict* conflict = [conflicts objectForKey:delta.canonicalPath];
+          if (conflict && delta.submodule) {
+            [self setSubmoduleWithConflict:conflict toReferenceSHA1:conflict.ancestorBlobSHA1];
+          }
+        }
+        return YES;
+      } else if ([characters isEqualToString:@"g"]) {
+        for (GCDiffDelta* delta in deltas) {
+          GCIndexConflict* conflict = [conflicts objectForKey:delta.canonicalPath];
+          if (conflict && delta.submodule) {
+            [self setSubmoduleWithConflict:conflict toReferenceSHA1:conflict.ourBlobSHA1];
+          }
+        }
+        return YES;
+      } else if ([characters isEqualToString:@"t"]) {
+        for (GCDiffDelta* delta in deltas) {
+          GCIndexConflict* conflict = [conflicts objectForKey:delta.canonicalPath];
+          if (conflict && delta.submodule) {
+            [self setSubmoduleWithConflict:conflict toReferenceSHA1:conflict.theirBlobSHA1];
           }
         }
         return YES;
