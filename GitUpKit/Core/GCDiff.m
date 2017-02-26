@@ -246,8 +246,14 @@ static inline GCFileDiffChange _FileDiffChangeFromStatus(git_delta_t status) {
     case kGCFileDiffChange_Renamed:
     case kGCFileDiffChange_Copied:
     case kGCFileDiffChange_TypeChanged:
-    case kGCFileDiffChange_Conflicted:
       return GC_FILE_MODE_IS_SUBMODULE(_newFile.mode);
+      
+    case kGCFileDiffChange_Conflicted:
+      if (_oldFile) {
+        return GC_FILE_MODE_IS_SUBMODULE(_oldFile.mode);
+      } else {
+        return GC_FILE_MODE_IS_SUBMODULE(_newFile.mode);
+      }
   }
   XLOG_DEBUG_UNREACHABLE();
   return NO;
