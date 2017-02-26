@@ -28,5 +28,8 @@
 - (BOOL)resetLinesFromFileInIndexToHEAD:(NSString*)path error:(NSError**)error usingFilter:(GCIndexLineFilter)filter;  // git reset -p {file} - Copy only some lines of file from HEAD to index (aka unstage lines)
 - (BOOL)checkoutLinesFromFileFromIndex:(NSString*)path error:(NSError**)error usingFilter:(GCIndexLineFilter)filter;  // git checkout -p {file} - Copy only some lines of file from index to workdir (aka discard lines)
 
-- (BOOL)resolveConflictAtPath:(NSString*)path error:(NSError**)error;
+- (BOOL)resolveConflict:(GCIndexConflict*)conflict error:(NSError**)error;
+
+- (BOOL)setSubmoduleAtPath:(NSString*)path toReferenceCommitSHA1:(NSString*)targetCommitSHA1 error:(NSError**)error;
+
 @end

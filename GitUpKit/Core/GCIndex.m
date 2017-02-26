@@ -39,32 +39,32 @@ extern void git_index_entry__init_from_stat(git_index_entry* entry, struct stat*
       _status = ancestor ? kGCIndexConflictStatus_BothModified : kGCIndexConflictStatus_BothAdded;
 
       git_oid_cpy(&_ourOID, &our->id);
-      XLOG_DEBUG_CHECK((our->mode == GIT_FILEMODE_BLOB) || (our->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (our->mode == GIT_FILEMODE_LINK));
+      XLOG_DEBUG_CHECK((our->mode == GIT_FILEMODE_BLOB) || (our->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (our->mode == GIT_FILEMODE_LINK) || (our->mode == 57344));
       _ourFileMode = GCFileModeFromMode(our->mode);
 
       git_oid_cpy(&_theirOID, &their->id);
-      XLOG_DEBUG_CHECK((their->mode == GIT_FILEMODE_BLOB) || (their->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (their->mode == GIT_FILEMODE_LINK));
+      XLOG_DEBUG_CHECK((their->mode == GIT_FILEMODE_BLOB) || (their->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (their->mode == GIT_FILEMODE_LINK) || (their->mode == 57344));
       _theirFileMode = GCFileModeFromMode(their->mode);
     } else if (our) {
       XLOG_DEBUG_CHECK(!strcmp(our->path, ancestor->path));
       _status = kGCIndexConflictStatus_DeletedByThem;
 
       git_oid_cpy(&_ourOID, &our->id);
-      XLOG_DEBUG_CHECK((our->mode == GIT_FILEMODE_BLOB) || (our->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (our->mode == GIT_FILEMODE_LINK));
+      XLOG_DEBUG_CHECK((our->mode == GIT_FILEMODE_BLOB) || (our->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (our->mode == GIT_FILEMODE_LINK) || (our->mode == 57344));
       _ourFileMode = GCFileModeFromMode(our->mode);
     } else if (their) {
       XLOG_DEBUG_CHECK(!strcmp(their->path, ancestor->path));
       _status = kGCIndexConflictStatus_DeletedByUs;
 
       git_oid_cpy(&_theirOID, &their->id);
-      XLOG_DEBUG_CHECK((their->mode == GIT_FILEMODE_BLOB) || (their->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (their->mode == GIT_FILEMODE_LINK));
+      XLOG_DEBUG_CHECK((their->mode == GIT_FILEMODE_BLOB) || (their->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (their->mode == GIT_FILEMODE_LINK) || (their->mode == 57344));
       _theirFileMode = GCFileModeFromMode(their->mode);
     } else {
       XLOG_DEBUG_UNREACHABLE();
     }
     if (ancestor) {
       git_oid_cpy(&_ancestorOID, &ancestor->id);
-      XLOG_DEBUG_CHECK((ancestor->mode == GIT_FILEMODE_BLOB) || (ancestor->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (ancestor->mode == GIT_FILEMODE_LINK));
+      XLOG_DEBUG_CHECK((their->mode == GIT_FILEMODE_BLOB) || (their->mode == GIT_FILEMODE_BLOB_EXECUTABLE) || (their->mode == GIT_FILEMODE_LINK) || (their->mode == 57344));
       _ancestorFileMode = GCFileModeFromMode(ancestor->mode);
     }
     if (our) {

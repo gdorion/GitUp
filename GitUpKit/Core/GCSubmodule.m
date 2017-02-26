@@ -310,20 +310,33 @@ cleanup:
   if (submodules == nil) {
     return NO;
   }
+  
+  NSArray<NSString *> *conflictPaths = @[];
+  
+  git_index* index = [self reloadRepositoryIndex:error];
+  
+  if (index && git_index_has_conflicts(index)) {
+    conflictPaths = [self checkConflicts:nil].allKeys;
+  }
+  
+  git_index_free(index);
+  
   for (GCSubmodule* submodule in submodules) {
-    NSError* localError;
-    if (![self updateSubmodule:submodule force:force error:&localError]) {
-      if ([localError.domain isEqualToString:GCErrorDomain] && (localError.code == kGCErrorCode_NotFound)) {
-        continue;
+    if (![conflictPaths doesContain:submodule.path]) {
+      NSError* localError;
+      if (![self updateSubmodule:submodule force:force error:&localError]) {
+        if ([localError.domain isEqualToString:GCErrorDomain] && (localError.code == kGCErrorCode_NotFound)) {
+          continue;
+        }
+        if (error) {
+          *error = localError;
+        }
+        return NO;
       }
-      if (error) {
-        *error = localError;
+      GCRepository* repository = [[GCRepository alloc] initWithSubmodule:submodule error:error];
+      if (![repository updateAllSubmodulesResursively:force error:error]) {
+        return NO;
       }
-      return NO;
-    }
-    GCRepository* repository = [[GCRepository alloc] initWithSubmodule:submodule error:error];
-    if (![repository updateAllSubmodulesResursively:force error:error]) {
-      return NO;
     }
   }
   return YES;

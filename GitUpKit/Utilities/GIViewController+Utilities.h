@@ -61,6 +61,8 @@ extern NSString* const GIViewController_MergeTool;
 - (void)resolveConflictInMergeTool:(GCIndexConflict*)conflict;
 - (void)markConflictAsResolved:(GCIndexConflict*)conflict;
 
+- (void)setSubmoduleWithConflict:(GCIndexConflict*)conflict toReferenceSHA1:(NSString *)targetSHA1;
+
 - (GCCommit*)resolveConflictsWithResolver:(id<GIMergeConflictResolver>)resolver
                                     index:(GCIndex*)index
                                 ourCommit:(GCCommit*)ourCommit

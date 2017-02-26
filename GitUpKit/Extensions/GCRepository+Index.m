@@ -111,15 +111,38 @@
   return [self checkoutLinesInFileToWorkingDirectory:path fromIndex:index error:error usingFilter:filter];
 }
 
-- (BOOL)resolveConflictAtPath:(NSString*)path error:(NSError**)error {
+- (BOOL)resolveConflict:(GCIndexConflict*)conflict error:(NSError**)error {
   GCIndex* index = [self readRepositoryIndex:error];
   if (index == nil) {
     return NO;
   }
-  if ([[NSFileManager defaultManager] fileExistsAtPath:[self absolutePathForFile:path] followLastSymlink:NO] && ![self addFileInWorkingDirectory:path toIndex:index error:error]) {
+  if (conflict.ancestorFileMode != kGCFileMode_Submodule) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[self absolutePathForFile:conflict.path] followLastSymlink:NO] && ![self addFileInWorkingDirectory:conflict.path toIndex:index error:error]) {
+      return NO;
+    }
+  }
+  
+  return [self clearConflictForFile:conflict.path inIndex:index error:error] && [self writeRepositoryIndex:index error:error];
+}
+
+- (BOOL)setSubmoduleAtPath:(NSString*)path toReferenceCommitSHA1:(NSString*)targetCommitSHA1 error:(NSError**)error {
+  GCSubmodule *submodule = [self lookupSubmoduleWithName:path error:error];
+  if (!submodule) {
     return NO;
   }
-  return [self clearConflictForFile:path inIndex:index error:error] && [self writeRepositoryIndex:index error:error];
+  
+  GCRepository *submoduleRepository = [[GCRepository alloc] initWithSubmodule:submodule error:error];
+  if (!submoduleRepository) {
+    return NO;
+  }
+  
+  GCCommit *targetCommit = [submoduleRepository findCommitWithSHA1:targetCommitSHA1 error:error];
+  if (!targetCommit) {
+    //TODO: fetch submodule branches to get the latest commits if necessary ?
+    return NO;
+  }
+  
+  return [submoduleRepository setDetachedHEADToCommit:targetCommit error:error];
 }
 
 @end

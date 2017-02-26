@@ -143,8 +143,8 @@ GCFileMode GCFileModeFromMode(git_filemode_t mode) {
       return kGCFileMode_BlobExecutable;
     case GIT_FILEMODE_LINK:
       return kGCFileMode_Link;
-    case GIT_FILEMODE_COMMIT:
-      return kGCFileMode_Commit;
+    case 57344: //TODO: not hardcode a number like this
+      return kGCFileMode_Submodule;
   }
   XLOG_DEBUG_UNREACHABLE();
   return 0;

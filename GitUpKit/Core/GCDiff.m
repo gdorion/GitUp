@@ -216,7 +216,7 @@ static inline GCFileDiffChange _FileDiffChangeFromStatus(git_delta_t status) {
 }
 
 - (NSString*)description {
-  static char modes[] = {' ', 'T', 'B', 'X', 'L', 'C'};  // WARNING: Must match GCFileModeFromMode
+  static char modes[] = {' ', 'T', 'B', 'X', 'L', 'C', 'S'};  // WARNING: Must match GCFileModeFromMode
   static char status[] = {// WARNING: Must match GCFileDiffChange
                           ' ', 'I', '?', 'X',
                           'A', 'D', 'M',

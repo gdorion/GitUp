@@ -598,8 +598,22 @@ static NSString* _diffTemporaryDirectoryPath = nil;
 
 - (void)markConflictAsResolved:(GCIndexConflict*)conflict {
   NSError* error;
-  if ([self.repository resolveConflictAtPath:conflict.path error:&error]) {
+  if ([self.repository resolveConflict:conflict error:&error]) {
     [self.repository notifyWorkingDirectoryChanged];
+  } else {
+    [self presentError:error];
+  }
+}
+
+- (void)setSubmoduleWithConflict:(GCIndexConflict*)conflict toReferenceSHA1:(NSString *)targetSHA1 {
+  NSError* error;
+  if ([self.repository setSubmoduleAtPath:conflict.path toReferenceCommitSHA1:targetSHA1 error:&error]) {
+    if ([self.repository resolveConflict:conflict error:&error]) {
+      [self.repository notifyWorkingDirectoryChanged];
+      //TODO: move the wrong deleted submodule in the index to the working directory to cancel the changes
+    } else {
+      [self presentError:error];
+    }
   } else {
     [self presentError:error];
   }

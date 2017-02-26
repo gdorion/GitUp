@@ -65,6 +65,16 @@
 @property(nonatomic, weak) IBOutlet NSButton* resolveButton;
 @end
 
+@interface GISubmoduleConflictDiffCellView : NSTableCellView
+@property(nonatomic, weak) IBOutlet NSTextField* statusTextField;
+@property(nonatomic, weak) IBOutlet NSTextField* baseSHA1TextField;
+@property(nonatomic, weak) IBOutlet NSTextField* ourSHA1TextField;
+@property(nonatomic, weak) IBOutlet NSTextField* theirSHA1TextField;
+@property(nonatomic, weak) IBOutlet NSButton* useBaseButton;
+@property(nonatomic, weak) IBOutlet NSButton* useOursButton;
+@property(nonatomic, weak) IBOutlet NSButton* useTheirsButton;
+@end
+
 @interface GISubmoduleDiffCellView : NSTableCellView
 @property(nonatomic, weak) IBOutlet NSView* contentView;
 @property(nonatomic, weak) IBOutlet NSTextField* oldSHA1TextField;
@@ -165,6 +175,9 @@ NSString* const GIDiffContentsViewControllerUserDefaultKey_DiffViewMode = @"GIDi
 @implementation GIConflictDiffCellView
 @end
 
+@implementation GISubmoduleConflictDiffCellView
+@end
+
 @implementation GISubmoduleDiffCellView
 @end
 
@@ -197,6 +210,7 @@ static NSImage* _untrackedImage = nil;
   CGFloat _headerViewHeight;
   CGFloat _emptyViewHeight;
   CGFloat _conflictViewHeight;
+  CGFloat _submoduleConflictViewHeight;
   CGFloat _submoduleViewHeight;
   CGFloat _binaryViewHeight;
 }
@@ -255,6 +269,7 @@ static NSColor* _DimColor(NSColor* color) {
   _headerViewHeight = [[_tableView makeViewWithIdentifier:@"header" owner:self] frame].size.height;
   _emptyViewHeight = [[_tableView makeViewWithIdentifier:@"empty" owner:self] frame].size.height;
   _conflictViewHeight = [[_tableView makeViewWithIdentifier:@"conflict" owner:self] frame].size.height;
+  _submoduleConflictViewHeight = [[_tableView makeViewWithIdentifier:@"submoduleconflict" owner:self] frame].size.height;
   _submoduleViewHeight = [[_tableView makeViewWithIdentifier:@"submodule" owner:self] frame].size.height;
   _binaryViewHeight = [[_tableView makeViewWithIdentifier:@"binary" owner:self] frame].size.height;
 
@@ -499,6 +514,8 @@ static inline NSString* _StringFromFileMode(GCFileMode mode) {
       return NSLocalizedString(@"Link", nil);
     case kGCFileMode_Commit:
       return NSLocalizedString(@"Commit", nil);
+    case kGCFileMode_Submodule:
+      return NSLocalizedString(@"Submodule", nil);
   }
   return nil;
 }
@@ -546,12 +563,28 @@ static inline NSString* _StringFromFileMode(GCFileMode mode) {
           status = NSLocalizedString(@"deleted by them", nil);
           break;
       }
-      GIConflictDiffCellView* view = [_tableView makeViewWithIdentifier:@"conflict" owner:self];
-      view.statusTextField.stringValue = [NSString stringWithFormat:NSLocalizedString(@"This file has conflicts (%@)", nil), status];
-      view.openButton.tag = data;
-      view.mergeButton.tag = data;
-      view.resolveButton.tag = data;
-      return view;
+      
+      NSString *statusString = [NSString stringWithFormat:NSLocalizedString(@"This submodule has reference issues (%@)", nil), status];
+      
+      if (data.conflict.ancestorFileMode == kGCFileMode_Submodule) {
+        GISubmoduleConflictDiffCellView* view = [_tableView makeViewWithIdentifier:@"submoduleconflict" owner:self];
+        view.statusTextField.stringValue = statusString;
+        view.baseSHA1TextField.stringValue = data.conflict.ancestorBlobSHA1;
+        view.ourSHA1TextField.stringValue = data.conflict.ourBlobSHA1;
+        view.theirSHA1TextField.stringValue = data.conflict.theirBlobSHA1;
+        view.useBaseButton.tag = data;
+        view.useOursButton.tag = data;
+        view.useTheirsButton.tag = data;
+        return view;
+      }
+      else {
+        GIConflictDiffCellView* view = [_tableView makeViewWithIdentifier:@"conflict" owner:self];
+        view.statusTextField.stringValue = statusString;
+        view.openButton.tag = data;
+        view.mergeButton.tag = data;
+        view.resolveButton.tag = data;
+        return view;
+      }
     } else if (GC_FILE_MODE_IS_SUBMODULE(delta.oldFile.mode) || GC_FILE_MODE_IS_SUBMODULE(delta.newFile.mode)) {
       GISubmoduleDiffCellView* view = [_tableView makeViewWithIdentifier:@"submodule" owner:self];
       NSString* oldSHA1 = delta.oldFile ? delta.oldFile.SHA1 : nil;
@@ -668,7 +701,11 @@ static inline NSString* _StringFromFileMode(GCFileMode mode) {
     } else if (data.empty) {
       return _emptyViewHeight;
     } else if (data.conflict) {
-      return _conflictViewHeight;
+      if (data.conflict.ancestorFileMode == kGCFileMode_Submodule) {
+        return _submoduleConflictViewHeight;
+      } else {
+        return _conflictViewHeight;
+      }
     } else if (GC_FILE_MODE_IS_SUBMODULE(delta.oldFile.mode) || GC_FILE_MODE_IS_SUBMODULE(delta.newFile.mode)) {
       return _submoduleViewHeight;
     } else {
@@ -735,6 +772,21 @@ static inline NSString* _StringFromFileMode(GCFileMode mode) {
 - (IBAction)markAsResolved:(id)sender {
   GIDiffContentData* data = (__bridge GIDiffContentData*)(void*)[(NSButton*)sender tag];
   [self markConflictAsResolved:data.conflict];
+}
+
+- (IBAction)submoduleConflictUseBase:(id)sender {
+  GIDiffContentData* data = (__bridge GIDiffContentData*)(void*)[(NSButton*)sender tag];
+  [self setSubmoduleWithConflict:data.conflict toReferenceSHA1:data.conflict.ancestorBlobSHA1];
+}
+
+- (IBAction)submoduleConflictUseOurs:(id)sender {
+  GIDiffContentData* data = (__bridge GIDiffContentData*)(void*)[(NSButton*)sender tag];
+  [self setSubmoduleWithConflict:data.conflict toReferenceSHA1:data.conflict.ourBlobSHA1];
+}
+
+- (IBAction)submoduleConflictUseTheirs:(id)sender {
+  GIDiffContentData* data = (__bridge GIDiffContentData*)(void*)[(NSButton*)sender tag];
+  [self setSubmoduleWithConflict:data.conflict toReferenceSHA1:data.conflict.theirBlobSHA1];
 }
 
 @end

@@ -34,11 +34,12 @@ typedef NS_ENUM(NSUInteger, GCFileMode) {
   kGCFileMode_Blob,
   kGCFileMode_BlobExecutable,
   kGCFileMode_Link,
-  kGCFileMode_Commit
+  kGCFileMode_Commit,
+  kGCFileMode_Submodule
 };
 
 #define GC_FILE_MODE_IS_FILE(m) (((m) == kGCFileMode_Blob) || ((m) == kGCFileMode_BlobExecutable) || ((m) == kGCFileMode_Link))
-#define GC_FILE_MODE_IS_SUBMODULE(m) (((m) == kGCFileMode_Tree) || ((m) == kGCFileMode_Commit))
+#define GC_FILE_MODE_IS_SUBMODULE(m) (((m) == kGCFileMode_Tree) || ((m) == kGCFileMode_Commit) || ((m) == kGCFileMode_Submodule))
 
 @class GCRepository;
 

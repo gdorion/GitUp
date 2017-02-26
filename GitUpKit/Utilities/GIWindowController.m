@@ -124,7 +124,7 @@ static void _WalkViewTree(NSView* view, NSMutableArray* array) {
 }
 
 - (void)keyDown:(NSEvent*)event {
-  if (![self.windowController.delegate windowController:self.windowController handleKeyDown:event]) {
+  if (event != nil && ![self.windowController.delegate windowController:self.windowController handleKeyDown:event]) {
     [super keyDown:event];
   }
 }
